@@ -1,24 +1,43 @@
 import { create } from 'zustand';
 
-const useUserStore = create((set) => ({
-    // 1. State 설정(보관할 데이터)
-    // 앱 시작 시 localstorage에 토근이 있으면 로그인 상태, 없으면 로그아웃 상태로 시작
-    token: localStorage.getItem('token') || null,
-    isLoggedIn: !!localStorage.getItem('token'),
+// 1. 스토어의 기본 틀은 그대로입니다.
+const useUserStore = create((set) => { // 로직을 통해 state(상태)가 결정되므로 묵시적반환'()'으로 감싸지 않음.
+  // 2. 스토어가 처음 로드될 때, 만료 시간을 확인하는 로직을 추가합니다.
+  const token = localStorage.getItem('token');
+  const loginTime = localStorage.getItem('loginTime');
+  const ONE_HOUR = 60 * 60 * 1000; // 1시간을 밀리초로 계산, 변하지 않는 상수이므로 대문자로 표기
 
-    // 2. 액션(Action): 상태를 변경하는 함수
-    // 로그인 시 토근을 받아 상태를 업데이트하는 함수
+  // 상태에 따라 재할당 되므로 let으로 선언  
+  let initialState = {
+    token: null,
+    isLoggedIn: false,
+  };
+
+  // 토큰과 로그인 시간이 모두 존재하고, 1시간이 지나지 않았다면 로그인 상태로 초기화합니다.
+  if (token && loginTime && (new Date().getTime() - loginTime < ONE_HOUR)) {
+    initialState = { token, isLoggedIn: true };
+  } else {
+    // 토큰이 만료되었거나 없다면 localStorage를 깨끗하게 비웁니다.
+    localStorage.removeItem('token');
+    localStorage.removeItem('loginTime');
+  }
+
+  // 3. 계산된 초기 상태와 액션들을 반환합니다.
+  return {
+    ...initialState,
     setToken: (token) => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('LoginTimestamp', Date.now());
-        set({ token: token, isLoggedIn: true });
-
+      localStorage.setItem('token', token);
+      // 로그인 시, 현재 시간을 함께 저장합니다.
+      localStorage.setItem('loginTime', new Date().getTime());
+      set({ token, isLoggedIn: true });
     },
-    //로그아웃 시 토큰을 제거하고 상태를 업데이트
     logout: () => {
-        localStorage.removeItem('token');
-        set({token: null, isLoggedIn: false});
-    }
-}));
+      // 로그아웃 시, 토큰과 시간 기록을 모두 삭제합니다.
+      localStorage.removeItem('token');
+      localStorage.removeItem('loginTime');
+      set({ token: null, isLoggedIn: false });
+    },
+  };
+});
 
 export default useUserStore;
