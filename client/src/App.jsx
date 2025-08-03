@@ -2,10 +2,10 @@ import React from 'react' // React 엔진과 useEffect 훅
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'; // // 페이지 이동(라우팅) 도구 세트
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SingupPage';
+import SignupPage from './pages/SignupPage';
 // import ProflePage from './pages/ProfilePage';
 import useUserStore from './store/userStore';
-import PortectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css'
 
 function App() {
@@ -36,7 +36,7 @@ const handleLogout = () => {
               </>
             ) : (
               <>
-              <Link to="/singup">회원가입</Link>
+              <Link to="/signup">회원가입</Link>
               <Link to="/login">로그인</Link>
               </>
             )}
@@ -44,7 +44,7 @@ const handleLogout = () => {
         </header>
         <main className='app-main'>
           <Routes>
-            <Route path='/' element={<PortectedRoute><HomePage /></PortectedRoute>} />
+            <Route path='/' element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignupPage />} />
             {/* <Route path='/profile' element={<ProfilePage />} /> */}
