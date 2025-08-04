@@ -46,7 +46,7 @@ const handlePostSubmit = async (e) => {
         console.log('게시글 작성에 실패했어요.', error);
         alert('게시글 작성에 실패했어요.');
     }
-}
+};
     
     return (
         <div className="homepage">
@@ -69,13 +69,15 @@ const handlePostSubmit = async (e) => {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         />
-                        <button type="submit" className="auth-button">등록</button>
+                        <button type="submit" className="button button-primary">등록</button>
                     </form>
                 </section>
             )}
             <section className="post-list">
             <h2>전체 게시글</h2>
-            {posts.map(post => (
+            {
+            posts.length > 0 ? (
+            posts.map(post => (
                 <article key={post._id} className="post-card">
                 <h3>{post.title}</h3>
                 <p className="post-content">{post.content}</p>
@@ -84,7 +86,10 @@ const handlePostSubmit = async (e) => {
                 <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
                 </article>
-            ))}
+            )) ) : (
+                <p className="no-posts-message">등록된 게시물이 없습니다.</p>
+            )
+            }
             </section>
     </div>
     );

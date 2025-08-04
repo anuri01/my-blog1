@@ -43,7 +43,7 @@ const postSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -54,14 +54,14 @@ app.get('/api', (req, res) => {
 });
 
 //인증 미들웨어 함수
-const authMiddleWare = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
     // 사용자 요청헤더에서 토큰값을 꺼냄옴(Authorizarion은 클라이언트 측 사용자가 정한 이름) axiosConfig에 설정됨
-    const authHeader = req.headers.Authorization;
+    const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(400).json({message:'인증 정보가 없습니다.'});
     }
     // 실제 토큰 값만 저장 공백을 기준으로 나누고 2번째 배열 저장
-    const token = authHeader.split(' ',[1]);
+    const token = authHeader.split(' ')[1];
     try {
         // 토큰값 검증하기 해당 사용자에게 발행한 토큰이 맞는지 유효기간이 지나지 않았는지 검증.(verity 메소드 사용 및 씨크리키를 통해 검증)
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -69,7 +69,7 @@ const authMiddleWare = (req, res, next) => {
         req.user = { id: decoded.id, username: decoded.username };
         next();
         }  catch (error) {
-        return res.staus(401).json({message: '유효하지 않은 토큰입니다.'});
+        return res.status(401).json({message: '유효하지 않은 토큰입니다.'});
     }
 };
 
@@ -89,7 +89,7 @@ app.post('/api/users/signup', async(req,res) => {
         }
         const user = new User({ username, password });
         await user.save();
-        res.status(200).json({message: '회원 가입이 완료되었습니다.'})
+        res.status(201).json({message: '회원 가입이 완료되었습니다.'})
     } catch (error) {
         res.status(500).json({message:'서버 오류 발생'});
     }
@@ -111,7 +111,7 @@ app.post('/api/users/login', async(req,res) => {
         }
         // 토큰 발행시 user id와 username을 포함한다. 
         const token = jwt.sign(
-            { id: user._id, username: user.name },
+            { id: user._id, username: user.username },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         )
@@ -122,33 +122,34 @@ app.post('/api/users/login', async(req,res) => {
 })
 
 // 작성된 게시글 등록
-app.post('api/posts', authMiddleWare, async(req, res) => {
+app.post('/api/posts', authMiddleware, async(req, res) => {
     try {
+        console.log('서버가 받은 데이터 (req.body):', req.body);
         const { title, content } = req.body;
         if (!title || !content) {
             return res.status(400).json({message:'게시물 제목과 내용은 필수사항이에요.'});
         }
         const newPost = new Post({
             //키 값과 변수명이 같을 경우 키값 생략가능 ES6 문법(객체 속성 축약)
-            title,
-            content,
+            title: title,
+            content: content,
             author: req.user.id
         });
-        await Post.save(newPost);
-        res.staus(200).json({newPost});
+        await newPost.save();
+        res.status(201).json(newPost);
         } catch (error) {
             res.status(500).json({message: '서버 오류가 발생했어요.'});
         }
     
 
-})
+});
 
 // 게시글 목록
-app.get('/api/posts', authMiddleWare, async(req, res) => {
+app.get('/api/posts', authMiddleware, async(req, res) => {
     try {
-        const Posts = await Post.find({})
+        const posts = await Post.find({})
         .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
-        .sort({createAt: -1 });
+        .sort({createdAt: -1 });
         res.json(posts);
     } catch(error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
