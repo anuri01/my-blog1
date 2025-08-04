@@ -187,14 +187,14 @@ app.put('/api/posts/:id', authMiddleware, async(req, res) => {
 app.delete('/api/posts/:id', authMiddleware, async( req, res ) => {
     try {
         const postId = req.params.id;
-        const deletePost = await findOneAndDelete({ _id: postId, author: req.user.id });
+        const deletedPost = await findOneAndDelete({ _id: postId, author: req.user.id });
 
         // 삭제 실패 시 처리
-        if(!deletePost) {
+        if(!deletedPost) {
             return res.status(404).json({message:'게시물을 찾을 수 없거나 삭제 권한이 없어요.'});
         }
         // 삭제 성공 시 처리
-        res.json({message:'게시물이 삭제됐어요.'});
+        res.json({message:`'${deletedPost.title}' 게시물이 삭제됐어요.`});
 
     } catch (error) {
         res.status(500).json({message:'서버 오류 발생'});
