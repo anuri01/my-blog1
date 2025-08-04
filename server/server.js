@@ -6,6 +6,7 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 //const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
+import { populate } from 'dotenv';
 
 //Express 앱 생성 및 설정
 const app = express();
@@ -120,15 +121,39 @@ app.post('/api/users/login', async(req,res) => {
     }
 })
 
-// 게시글 작성
+// 작성된 게시글 등록
 app.post('api/posts', authMiddleWare, async(req, res) => {
+    try {
+        const { title, content } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({message:'게시물 제목과 내용은 필수사항이에요.'});
+        }
+        const newPost = new Post({
+            //키 값과 변수명이 같을 경우 키값 생략가능 ES6 문법(객체 속성 축약)
+            title,
+            content,
+            author: req.user.id
+        });
+        await Post.save(newPost);
+        res.staus(200).json({newPost});
+        } catch (error) {
+            res.status(500).json({message: '서버 오류가 발생했어요.'});
+        }
+    
 
 })
 
 // 게시글 목록
 app.get('/api/posts', authMiddleWare, async(req, res) => {
-
-})
+    try {
+        const Posts = await Post.find({})
+        .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
+        .sort({createAt: -1 });
+        res.json(posts);
+    } catch(error) {
+        res.status(500).json({message:'서버 오류가 발생했습니다.'});
+    }
+});
 
 // 서버실행
 app.listen(PORT, () => {
