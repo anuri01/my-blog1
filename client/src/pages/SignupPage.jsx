@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { validateUsername, validatePassword } from "../utils/validation";
 import './AuthPage.css'; // 로그인/회원가입 페이지 공통 스타일
 
 function SignupPage() {
@@ -14,6 +15,19 @@ function SignupPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        
+        // 사용자 이름 유효성
+        const usernameError = validateUsername(username);
+        if (usernameError) {
+            alert(usernameError);
+            return;
+        }
+
+        const passwordError = validatePassword(password);
+        if(passwordError) {
+            alert(passwordError);
+            return;
+        }
 
         try {
             // 서버에 회원가입 요청
