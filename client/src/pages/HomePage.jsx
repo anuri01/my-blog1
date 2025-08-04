@@ -5,13 +5,13 @@ import './HomePage.css';
 
 
 function HomePage() {
-    // 관리할 상태 설정
+//전역 스토에서 로그인 상태만 가져옴
+const { isLoggedIn } = useUserStore();
+// 관리할 상태 설정
 // 목록은 배열이므로 빈배열로 초기화
 const [ posts, setPosts ] = useState([]);
 const [ title, setTitle ] = useState('');
 const [ content, setContent ] = useState('');
-//전역 스토에서 로그인 상태만 가져옴
-const { isLoggedIn } = useUserStore;
 
 // 기능(함수) 정의
 // 서버로부터 모든 게시물을 불러옴
@@ -51,7 +51,7 @@ const handlePostSubmit = async (e) => {
     return (
         <div className="homepage">
             <h3>블로그 메인페이지 </h3>
-            {isLoggedIn && (
+            { isLoggedIn && (
                 <section className="post-creator">
                     <h3>새 글 작성하기</h3>
                     <form onSubmit={handlePostSubmit}>
