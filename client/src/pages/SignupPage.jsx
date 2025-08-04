@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import api from "../api/axiosconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/validation";
 import './AuthPage.css'; // 로그인/회원가입 페이지 공통 스타일
@@ -31,7 +32,7 @@ function SignupPage() {
 
         try {
             // 서버에 회원가입 요청
-            await axios.post('http://localhost:4500/api/users/signup', { username, password });
+            await api.post('/users/signup', { username, password });
 
             // 요청 성공시 실행
             alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
