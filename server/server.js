@@ -121,6 +121,18 @@ app.post('/api/users/login', async(req,res) => {
     }
 })
 
+// 게시글 목록
+app.get('/api/posts', authMiddleware, async(req, res) => {
+    try {
+        const posts = await Post.find({})
+        .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
+        .sort({createdAt: -1 });
+        res.json(posts);
+    } catch(error) {
+        res.status(500).json({message:'서버 오류가 발생했습니다.'});
+    }
+});
+
 // 작성된 게시글 등록
 app.post('/api/posts', authMiddleware, async(req, res) => {
     try {
@@ -144,15 +156,48 @@ app.post('/api/posts', authMiddleware, async(req, res) => {
 
 });
 
-// 게시글 목록
-app.get('/api/posts', authMiddleware, async(req, res) => {
+//작성 게시글 수정
+app.put('/api/posts/:id', authMiddleware, async(req, res) => {
     try {
-        const posts = await Post.find({})
-        .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
-        .sort({createdAt: -1 });
-        res.json(posts);
-    } catch(error) {
-        res.status(500).json({message:'서버 오류가 발생했습니다.'});
+        const {title, content} = req.body;
+        const postId = req.params.id;
+
+        if (!title || !content) {
+            return res.status(400).json({message:'제목과 내용을 필수사항이에요'});
+        }
+        // 조건, 내용, 옵션의 객체로 구성
+        const updatePost = await findOneAndUpdate(
+            { _id: postId, author: req.user.id }, // 업데이트 조건: ID일지, 작성자 일치
+            { title, content }, // 업데이트할 내용
+            { new: true } // 옵션 : 업데이트된 문서를 반환
+        );
+        // 저장 실패 시 처리
+        if(!updatePost) {
+            return res.status(404).json({message:'게시물을 찾을 수 없거나 수정 권한이 없어요'});
+        }
+        // 저장 성공 시 처리
+        res.status(201).json(updatePost);
+
+    } catch (error) {
+        res.status(500).json({message:'서버 오류 발생'});
+    }
+});
+
+//작성 게시글 삭제
+app.delete('/api/posts/:id', authMiddleware, async( req, res ) => {
+    try {
+        const postId = req.params.id;
+        const deletePost = await findOneAndDelete({ _id: postId, author: req.user.id });
+
+        // 삭제 실패 시 처리
+        if(!deletePost) {
+            return res.status(404).json({message:'게시물을 찾을 수 없거나 삭제 권한이 없어요.'});
+        }
+        // 삭제 성공 시 처리
+        res.json({message:'게시물이 삭제됐어요.'});
+
+    } catch (error) {
+        res.status(500).json({message:'서버 오류 발생'});
     }
 });
 
