@@ -51,8 +51,8 @@ function SignupPage() {
         <>
             <h3>마이블로그 회원가입</h3>
             <form className="auth-form" onSubmit={handleSubmit}>
-                <input className="signup-form-input" type='text' placeholder="사용자 이름" value={username} onChange={ (e) => setUsername(e.target.value) }></input>
-                <input className="signup-form-input" type='password' placeholder="비밀번호" value={password}  onChange={ (e) => setPassword(e.target.value)}></input>
+                <input className="signup-form-input" type='text' placeholder="사용자 이름(10자 이내)" value={username} maxLength={12} onChange={ (e) => setUsername(e.target.value) }></input>
+                <input className="signup-form-input" type='password' placeholder="비밀번호" value={password} maxLength={21} onChange={ (e) => setPassword(e.target.value)}></input>
                 <button type='submit' className="button-primary">회원가입</button>
             </form>
             {error && <p className="error-message">{error}</p>}
