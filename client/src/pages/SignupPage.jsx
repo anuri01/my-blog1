@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import axios from "axios";
-import api from "../api/axiosconfig";
+import api from "../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/validation";
 import './AuthPage.css'; // 로그인/회원가입 페이지 공통 스타일
