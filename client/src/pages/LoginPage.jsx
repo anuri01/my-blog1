@@ -28,12 +28,15 @@ function LoginPage() {
             navigate('/')
 
         } catch (err) {
+            if ( err.response ) {
             setError(err.response.data.message);
+            } else {
+            setError('서버에 연결할 수 없음.')
         }
-
-    }
+        } 
+      };    
     
-    return (
+      return (
         <>
             <h3>로그인 페이지</h3>
              <form className="auth-form" onSubmit={handleSubmit}>
