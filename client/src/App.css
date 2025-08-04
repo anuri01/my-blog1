@@ -67,3 +67,28 @@ body {
 .app-main {
   padding: 1.5rem;
 }
+
+.button-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  width: 150px;
+  align-self: center;
+  /* padding-top: 1rem; */
+  border: none;
+  border-radius: 8px;
+  background-color: #079ae3;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 500;
+}

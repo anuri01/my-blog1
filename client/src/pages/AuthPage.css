@@ -1,0 +1,26 @@
+h3 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    /* align-items: center; */
+}
+
+.signup-form-input {
+  height: 2.4rem;
+  padding: 0 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.auth-p {
+    margin-top: 1.5rem;
+    color: #555
+}
