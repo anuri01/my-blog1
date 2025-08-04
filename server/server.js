@@ -52,6 +52,26 @@ app.get('/api', (req, res) => {
     res.send('블로그 API 서버');
 });
 
+//인증 미들웨어 함수
+const authMiddleWare = (req, res, next) => {
+    // 사용자 요청헤더에서 토큰값을 꺼냄옴(Authorizarion은 클라이언트 측 사용자가 정한 이름) axiosConfig에 설정됨
+    const authHeader = req.headers.Authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(400).json({message:'인증 정보가 없습니다.'});
+    }
+    // 실제 토큰 값만 저장 공백을 기준으로 나누고 2번째 배열 저장
+    const token = authHeader.split(' ',[1]);
+    try {
+        // 토큰값 검증하기 해당 사용자에게 발행한 토큰이 맞는지 유효기간이 지나지 않았는지 검증.(verity 메소드 사용 및 씨크리키를 통해 검증)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // 검증이 완료되면 req.user 정보에 사용자 id와 username 추가해 다음 스텝을 진행할때 사용(username은 클라이언트에서 넘겨주기 떄문에 없어도 될 것으로 생각됨.)
+        req.user = { id: decoded.id, username: decoded.username };
+        next();
+        }  catch (error) {
+        return res.staus(401).json({message: '유효하지 않은 토큰입니다.'});
+    }
+};
+
 // --- 사용자 API 라우트 ---
 
 // 회원 가입
@@ -88,7 +108,7 @@ app.post('/api/users/login', async(req,res) => {
         if(!isMatch) {
             return res.status(400).json({message:'비밀번호가 올바르지 않습니다.'});
         }
-        // 토큰 발핼
+        // 토큰 발행시 user id와 username을 포함한다. 
         const token = jwt.sign(
             { id: user._id, username: user.name },
             process.env.JWT_SECRET,
@@ -98,6 +118,16 @@ app.post('/api/users/login', async(req,res) => {
     } catch(error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
     }
+})
+
+// 게시글 작성
+app.post('api/posts', authMiddleWare, async(req, res) => {
+
+})
+
+// 게시글 목록
+app.get('/api/posts', authMiddleWare, async(req, res) => {
+
 })
 
 // 서버실행
