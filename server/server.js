@@ -4,6 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
+//const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
 
 //Express 앱 생성 및 설정
@@ -78,9 +79,9 @@ app.post('/api/users/login', async(req,res) => {
     // 사용자 정보를 저장하고 현재 있는 사용자 있는 판단하고 비밀번호를 비교한 뒤 비밀번호가 맞으면 토큰을 발행한 뒤 로그인 처리
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({username})
+        const user = await User.findOne({username});
         if (!user) {
-            return res.status(400).json({message:'사용자 정보가 올바르지 않습니다.'})
+            return res.status(400).json({message:'사용자 정보가 올바르지 않습니다.'});
         }
         // bcrypt 패키지의 compare 메소드를 이용해 암호비교
         const isMatch = await bcrypt.compare(password, user.password);
