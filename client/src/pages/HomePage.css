@@ -120,3 +120,11 @@
   gap: 0.5rem;
   margin-top: 1rem;
 }
+
+.post-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title-link:hover h3 {
+  color: #079ae3;
+}

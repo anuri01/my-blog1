@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
 import './HomePage.css';
@@ -142,7 +143,9 @@ const handleUpdateSubmit = async ( e, postId ) => {
                     ) : (
                         // 일반 보기 UI
                 <>
+                <Link to={`/post/${post._id}`} className="post-title-link">
                 <h3>{post.title}</h3>
+                </Link>
                 <p className="post-content">{post.content}</p>
                 <div className="post-meta">
                 <span>작성자: {post.author ? post.author.username : '알 수 없음'}</span>

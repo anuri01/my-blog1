@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate } from 'react-router-dom'; // // íŽ˜ì
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import PostDetailPage from './pages/PostDetailPage';
 // import ProflePage from './pages/ProfilePage';
 import useUserStore from './store/userStore';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -47,6 +48,7 @@ const handleLogout = () => {
             <Route path='/' element={<HomePage />}/>
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignupPage />} />
+            <Route path='/post/:postId' element={<PostDetailPage />} />
             {/* <Route path='/profile' element={<ProfilePage />} /> */}
           </Routes>
         </main>

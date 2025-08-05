@@ -119,7 +119,7 @@ app.post('/api/users/login', async(req,res) => {
     } catch(error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
     }
-})
+});
 
 // 게시글 목록
 app.get('/api/posts', async(req, res) => {
@@ -130,6 +130,22 @@ app.get('/api/posts', async(req, res) => {
         res.json(posts);
     } catch(error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
+    }
+});
+
+// 게시글 상세페이지 
+app.get('/api/posts/:id', async (req, res) => {
+    try {
+        const postId = req.params.id;
+        // User에서 username 정보까지 추가해 저장
+        const postDetail = await Post.findById(postId).populate('author', 'username');
+        if(!postDetail) {
+            return res.status(404).json({ message: '게시물을 찾을 수 없습니다.' });
+        }
+        res.status(200).json(postDetail);
+
+    } catch (error) {
+        res.status(500).json({message: '서버 오류가 발생했습니다.'});
     }
 });
 
