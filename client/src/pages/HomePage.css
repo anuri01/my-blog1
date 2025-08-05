@@ -94,3 +94,29 @@
   display: flex;
   justify-content: space-between;
 }
+
+.post-actions {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.post-actions button {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+.edit-post-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

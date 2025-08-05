@@ -159,14 +159,14 @@ app.post('/api/posts', authMiddleware, async(req, res) => {
 //작성 게시글 수정
 app.put('/api/posts/:id', authMiddleware, async(req, res) => {
     try {
-        const {title, content} = req.body;
+        const { title, content } = req.body;
         const postId = req.params.id;
 
-        if (!title || !content) {
+        if ( !title || !content ) {
             return res.status(400).json({message:'제목과 내용을 필수사항이에요'});
         }
         // 조건, 내용, 옵션의 객체로 구성
-        const updatePost = await findOneAndUpdate(
+        const updatePost = await Post.findOneAndUpdate(
             { _id: postId, author: req.user.id }, // 업데이트 조건: ID일지, 작성자 일치
             { title, content }, // 업데이트할 내용
             { new: true } // 옵션 : 업데이트된 문서를 반환
@@ -187,7 +187,7 @@ app.put('/api/posts/:id', authMiddleware, async(req, res) => {
 app.delete('/api/posts/:id', authMiddleware, async( req, res ) => {
     try {
         const postId = req.params.id;
-        const deletedPost = await findOneAndDelete({ _id: postId, author: req.user.id });
+        const deletedPost = await Post.findOneAndDelete({ _id: postId, author: req.user.id });
 
         // 삭제 실패 시 처리
         if(!deletedPost) {
