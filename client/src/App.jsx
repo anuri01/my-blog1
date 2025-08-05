@@ -44,7 +44,7 @@ const handleLogout = () => {
         </header>
         <main className='app-main'>
           <Routes>
-            <Route path='/' element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path='/' element={<HomePage />}/>
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignupPage />} />
             {/* <Route path='/profile' element={<ProfilePage />} /> */}

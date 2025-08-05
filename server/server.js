@@ -122,7 +122,7 @@ app.post('/api/users/login', async(req,res) => {
 })
 
 // 게시글 목록
-app.get('/api/posts', authMiddleware, async(req, res) => {
+app.get('/api/posts', async(req, res) => {
     try {
         const posts = await Post.find({})
         .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
