@@ -175,6 +175,7 @@ app.post('/api/posts', authMiddleware, async(req, res) => {
 //작성 게시글 수정
 app.put('/api/posts/:id', authMiddleware, async(req, res) => {
     try {
+        // console.log('서버가 받은 데이터 (req.body):', req.body);
         const { title, content } = req.body;
         const postId = req.params.id;
 

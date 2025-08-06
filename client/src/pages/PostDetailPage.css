@@ -26,6 +26,22 @@
   color: #333;
   border-bottom: 1px solid #e0e0e0;
 }
+/* 👇 --- Tiptap 에디터의 기본 스타일을 흉내 내는 CSS 추가 --- 👇 */
+/* Tiptap은 p, strong, em 등의 기본 HTML 태그를 사용하므로, 
+   이 태그들에 직접 스타일을 적용해 줍니다. */
+.post-body p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.post-body strong {
+  font-weight: bold;
+}
+
+.post-body em {
+  font-style: italic;
+}
+
 .back-to-list {
   display: inline-block;
   font-size: 0.9rem;
@@ -34,3 +50,4 @@
   font-weight: bold;
   color: #079ae3;
 }
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../api/axiosConfig";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useUserStore from "../store/userStore";
+import TiptapEditor from "../components/TiptapEditor";
 import './PostEditor.css';
 
 function PostEditor() {
@@ -77,12 +78,19 @@ return (
                         maxLength={50}
                         onChange={(e) => setTitle(e.target.value)}
                         />
-                        <textarea 
+                        {/* 👇 기존 textarea/ReactQuill을 TiptapEditor 컴포넌트로 교체합니다. */}
+                         <TiptapEditor 
+                        content={content}
+                        onChange={(newContent) => {
+                        setContent(newContent);
+                        }}
+                        />
+                        {/* <textarea 
                         className="form-textarea"
                         placeholder="내용을 입력하세요."
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        />
+                        /> */}
                         <div className="button-group">
                         <Link to='/' className="button button-secondary">취소</Link>
                         <button type="submit" className="button button-primary">

@@ -46,11 +46,15 @@ function PostDetailPage() {
                     <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
             </header>
-            <div className="post-body">
+             <div 
+            className="post-body"
+            dangerouslySetInnerHTML={{ __html: post.content }} 
+            />
+                        {/* <div className="post-body">
                 {post.content.split('\n').map((line, index) => (
                     <p key={index}>{line}</p>
                 ))}
-            </div>
+            </div> */}
             <Link to="/" className="back-to-list">목록으로 돌아가기</Link>
         </article>
     );

@@ -1,0 +1,47 @@
+/* Tiptap 에디터 전체 컨테이너 */
+.tiptap-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* 메뉴바 스타일 */
+.menu-bar {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-bar button {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  margin-right: 0.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.menu-bar button:hover {
+  background-color: #f0f0f0;
+}
+
+/* 활성화된 버튼 스타일 */
+.menu-bar button.is-active {
+  background-color: #333;
+  color: white;
+}
+
+/* Tiptap 에디터의 실제 입력 영역 스타일 */
+.tiptap-container .ProseMirror {
+  min-height: 200px;
+  padding: 1rem;
+  outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+/* Tiptap 에디터의 placeholder 스타일 */
+.tiptap-container .ProseMirror p.is-editor-empty:first-child::before {
+  content: '내용을 입력하세요...';
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
