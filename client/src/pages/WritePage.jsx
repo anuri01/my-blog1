@@ -54,9 +54,9 @@ return (
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         />
+                        <div className="button-group">
+                        <Link to='/' className="button button-secondary">취소</Link>
                         <button type="submit" className="button button-primary">등록</button>
-                        <div className="write-post-link-container">
-                        <Link to='/' className="button">취소</Link>
                         </div>
                     </form>
                 </section>

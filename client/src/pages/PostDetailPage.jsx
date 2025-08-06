@@ -39,7 +39,8 @@ function PostDetailPage() {
     return (
         <article className="post-detail">
             <header className="post-header">
-                <h1>{post.title}</h1>
+                <h1>게시물 상세보기</h1>
+                <h2>{post.title}</h2>
                 <div className="post-meta">
                     <span>작성자: {post.author.username}</span>
                     <span>{new Date(post.createdAt).toLocaleDateString()}</span>

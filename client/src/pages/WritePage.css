@@ -46,7 +46,15 @@
 }
 
 /* 새 글 작성 폼 내부의 버튼에만 적용될 스타일 */
-.post-creator form .button {
-  width: 100%; /* 너비를 폼 너비에 꽉 채웁니다. */
-  margin-top: 1rem; /* 위쪽 내용(textarea)과 간격을 줍니다. */
+/* .post-creator form .button {
+  width: 100%; 너비를 폼 너비에 꽉 채웁니다.
+  margin-top: 1rem; /* 위쪽 내용(textarea)과 간격을 줍니다. 
+} */
+
+/* 버튼 그룹 스타일로 버튼을 1줄로 정렬 */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    /* margin-top: 1rem; */
 }

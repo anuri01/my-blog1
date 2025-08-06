@@ -91,16 +91,30 @@ a {
   transition: background-color 0.2s;
 }
 
-.button-primary {
+.button.button-primary {
+  flex: 6;
   background-color: #079ae3; /* 👈 요청하신 색상으로 변경 */
   color: white;
   border-color: #079ae3;
 }
 
-.button-primary:hover {
+button.button-primary:hover {
   background-color: #0681bf; /* 👈 마우스를 올렸을 때 살짝 어두운 파란색 */
 }
 
+/* 부가 액션 버튼 (기본 상태) */
+.button.button-secondary {
+  flex: 4;
+  background-color: #f8f9fa; /* 👈 매우 연한 회색으로 변경 */
+  color: #495057;          /* 글자색을 더 잘 보이도록 약간 진하게 */
+  border-color: #dee2e6;   /* 테두리 색상도 톤에 맞게 조정 */
+}
+
+/* 부가 액션 버튼에 마우스를 올렸을 때 */
+.button.button-secondary:hover {
+  background-color: #e9ecef; /* 👈 기본 상태보다 약간 더 진한 회색으로 변경 */
+  border-color: #ced4da;
+}
 /* .button-primary {
   display: flex;
   justify-content: center;
