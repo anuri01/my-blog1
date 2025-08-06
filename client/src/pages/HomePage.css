@@ -152,7 +152,13 @@
 .post-title {
   font-size: 0.9rem;
   margin: 0;
-  white-space: nowrap;
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; */
+    /* 👇 --- 2줄 말줄임을 위한 약속된 CSS 속성 세트 --- 👇 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 👈 표시할 최대 줄 수 */
   overflow: hidden;
   text-overflow: ellipsis;
 }
