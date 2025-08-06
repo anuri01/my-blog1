@@ -42,7 +42,7 @@ function LoginPage() {
              <form className="auth-form" onSubmit={handleSubmit}>
                 <input className="signup-form-input" type='text' placeholder="사용자 이름" value={username} maxLength={12} onChange={ (e) => setUsername(e.target.value) }></input>
                 <input className="signup-form-input" type='password' placeholder="비밀번호" value={password} maxLength={21} onChange={ (e) => setPassword(e.target.value)}></input>
-                <button type='submit' className="button button-primary">로그인</button>
+                <button type='submit' className="button button-primary-single">로그인</button>
             </form>
             {error && <p className="error-message">{error}</p>}
             <p className="auth-p">계정이 없으신가요? <Link to="/signup">회원가입</Link></p>

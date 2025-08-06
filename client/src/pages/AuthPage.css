@@ -27,6 +27,13 @@ h3 {
     color: #555
 }
 
+.auth-p a{
+    color: #555
+}
+.auth-p a:hover {
+  color: #0db223;
+}
+
 .signup-form-input:focus {
   border-color: #2f95df;
 }

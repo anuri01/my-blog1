@@ -102,7 +102,17 @@ a {
   border-color: #079ae3;
 }
 
+.button.button-primary-single {
+  background-color: #079ae3; /* 👈 요청하신 색상으로 변경 */
+  color: white;
+  border-color: #079ae3;
+}
+
 button.button-primary:hover {
+  background-color: #0681bf; /* 👈 마우스를 올렸을 때 살짝 어두운 파란색 */
+}
+
+button.button-primary-single:hover {
   background-color: #0681bf; /* 👈 마우스를 올렸을 때 살짝 어두운 파란색 */
 }
 
