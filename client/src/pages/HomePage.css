@@ -85,7 +85,32 @@
   text-align: right;
 }
 
-.post-actions button {
+
+/* .post-actions 안의 모든 버튼과 링크에 적용될 공통 클래스 */
+.action-button {
+  /* --- 폰트 스타일 통일 (핵심) --- */
+  font-family: inherit; /* 부모 요소의 폰트를 강제로 상속받음 */
+  font-size: 0.8rem;   /* 부모 요소의 폰트 크기를 강제로 상속받음 (또는 1rem) */
+  color: inherit;       /* a 태그의 기본 파란색 대신 부모의 글자색 상속 */
+  text-decoration: none;/* a 태그의 밑줄 제거 */
+  
+  /* --- 나머지 모양 스타일 --- */
+  display: inline-block; /* 레이아웃 기준 통일 */
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 0.2rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  vertical-align: middle; /* 세로 정렬 맞춤 (선택 사항) */
+}
+
+/* 마우스 올렸을 때 효과도 공통으로 적용 */
+.action-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* .post-actions button {
   background: none;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -93,6 +118,15 @@
   padding: 0.3rem 0.7rem;
   cursor: pointer;
 }
+
+.post-actions a {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 0.2rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+} */
 
 .edit-post-form {
   display: flex;

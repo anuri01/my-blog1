@@ -138,8 +138,9 @@ const handleUpdateSubmit = async ( e, postId ) => {
                 {/* 👇 로그인한 사용자가 본인 글일 때만 수정/삭제 버튼 보이기 */}
                   {isLoggedIn && user?.id === post.author?._id && (
                 <div className="post-actions">
-                    <button onClick={() => handleEditClick(post)}>수정</button>
-                    <button onClick={() => handleDeletePost(post._id)}>삭제</button>
+                    <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
+                    {/* <button onClick={() => handleEditClick(post)}>수정</button> */}
+                    <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
                 </div>
                 )}
                 </>
@@ -152,7 +153,7 @@ const handleUpdateSubmit = async ( e, postId ) => {
         </section>
         { isLoggedIn && (                
                       <div className="write-post-link-container">
-                         <Link to="/write" className="button button-primary">새 글 작성하기</Link>
+                         <Link to="/write" className="button button-primary-single">새 글 작성하기</Link>
                       </div>
             )}
     </div>

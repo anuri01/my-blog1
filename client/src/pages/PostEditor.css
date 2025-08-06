@@ -1,0 +1,60 @@
+.post-editor {
+    width: 100%;
+}
+
+.post-creator {
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.post-creator h3 {
+    margin-top: 0px;
+}
+
+.form-input {
+    width: 100%;
+    min-height: 28px;
+    border: 1px solid #ddd;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+  height: 2.8rem;
+  padding: 0 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+    width: 100%;
+    min-height: 7.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* 새 글 작성 폼 내부의 버튼에만 적용될 스타일 */
+/* .post-creator form .button {
+  width: 100%; 너비를 폼 너비에 꽉 채웁니다.
+  margin-top: 1rem; /* 위쪽 내용(textarea)과 간격을 줍니다. 
+} */
+
+/* 버튼 그룹 스타일로 버튼을 1줄로 정렬 */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    /* margin-top: 1rem; */
+}

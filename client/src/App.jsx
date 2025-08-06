@@ -1,9 +1,9 @@
 import React from 'react' // React 엔진과 useEffect 훅
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'; // // 페이지 이동(라우팅) 도구 세트
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'; // // 페이지 이동(라우팅) 도구 세트
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import WritePage from './pages/WritePage';
+import PostEditor from './pages/PostEditor';
 import PostDetailPage from './pages/PostDetailPage';
 // import ProflePage from './pages/ProfilePage';
 import useUserStore from './store/userStore';
@@ -47,9 +47,10 @@ const handleLogout = () => {
         <main className='app-main'>
           <Routes>
             <Route path='/' element={<HomePage />}/>
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/signup' element={<SignupPage />} />
-            <Route path='/write' element={<ProtectedRoute><WritePage /></ProtectedRoute>} />
+            <Route path='/login' element={isLoggedIn ? <Navigate to="/"/> : <LoginPage />} />
+            <Route path='/signup' element={isLoggedIn ? <Navigate to="/"/> : <SignupPage />} />
+            <Route path='/write' element={<ProtectedRoute><PostEditor /></ProtectedRoute>} />
+            <Route path='/edit/:postId' element={<ProtectedRoute><PostEditor /></ProtectedRoute>} />
             <Route path='/post/:postId' element={<PostDetailPage />} />
             {/* <Route path='/profile' element={<ProfilePage />} /> */}
           </Routes>
