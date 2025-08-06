@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
-const Post = require('./models/Post'); // Post 모델 가져오기
-require('dotenv').config();
+import mongoose from 'mongoose';
+import Post from './models/Post.js'; // 👈 ESM에서는 .js 확장자를 붙여주는 것이 좋습니다.
+import dotenv from 'dotenv';
+
+dotenv.config(); // dotenv는 import 후 config()를 따로 호출해줍니다.
 
 const clearPosts = async () => {
     try {
