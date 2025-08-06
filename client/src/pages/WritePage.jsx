@@ -35,10 +35,10 @@ const handlePostSubmit = async (e) => {
 
 return (
         <div className="wirte-page">
-            <h3>새 글 작성하기</h3>
+            <h1>새 글 작성하기</h1>
             { isLoggedIn && (
                 <section className="post-creator">
-                    <h3>새 글 작성하기</h3>
+                    {/* <h3>내용을 입력하세요.</h3> */}
                     <form onSubmit={handlePostSubmit}>
                         <input 
                         className="form-input"
@@ -55,9 +55,9 @@ return (
                         onChange={(e) => setContent(e.target.value)}
                         />
                         <button type="submit" className="button button-primary">등록</button>
-                        <Link to={'/'}>
-                        <button type="button" className="button">취소</button>
-                        </Link>
+                        <div className="write-post-link-container">
+                        <Link to='/' className="button">취소</Link>
+                        </div>
                     </form>
                 </section>
             )}

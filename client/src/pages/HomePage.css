@@ -128,3 +128,8 @@
 .post-title-link:hover h3 {
   color: #079ae3;
 }
+
+.write-post-link-container {
+  margin-bottom: 2rem;
+  text-align: right;
+}

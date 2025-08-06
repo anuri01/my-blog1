@@ -38,7 +38,7 @@ function LoginPage() {
     
       return (
         <>
-            <h3>로그인 페이지</h3>
+            <h1>로그인 페이지</h1>
              <form className="auth-form" onSubmit={handleSubmit}>
                 <input className="signup-form-input" type='text' placeholder="사용자 이름" value={username} maxLength={12} onChange={ (e) => setUsername(e.target.value) }></input>
                 <input className="signup-form-input" type='password' placeholder="비밀번호" value={password} maxLength={21} onChange={ (e) => setPassword(e.target.value)}></input>

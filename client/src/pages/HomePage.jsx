@@ -11,8 +11,10 @@ const { isLoggedIn, user } = useUserStore();
 // 관리할 상태 설정
 // 목록은 배열이므로 빈배열로 초기화
 const [ posts, setPosts ] = useState([]);
-const [ title, setTitle ] = useState('');
-const [ content, setContent ] = useState('');
+
+// '새 글 작성' 관련 상태(title, content)와 함수(handlePostSubmit)는 여기서 삭제됩니다.
+// const [ title, setTitle ] = useState('');
+// const [ content, setContent ] = useState('');
 
 // 게시글 수정관련 상태 설정 추가
 const [ editingPostId, setEditingPostId ] = useState('null');
@@ -34,29 +36,30 @@ useEffect(() => {
     fetchPosts();
  }, []);
 
-// 새글 작성 폼 제출 시 실행될 함수
-const handlePostSubmit = async (e) => {
-    // form 제출시 기본 동작 막음
-    e.preventDefault();
-    if (!title || !content) {
-        alert('제목과 내용을 모두 입력해 주세요.');
-        return;
-    }
+// 새글 작성 폼 제출 시 실행될 함수 - WritePage로 이동
+// const handlePostSubmit = async (e) => {
+//     // form 제출시 기본 동작 막음
+//     e.preventDefault();
+//     if (!title || !content) {
+//         alert('제목과 내용을 모두 입력해 주세요.');
+//         return;
+//     }
     
-    try {
-        await api.post('/posts', { title, content });
-        // 게시물 등록 성공 시 입력폼 초기화 
-        setTitle('');
-        setContent('');
-        fetchPosts();
+//     try {
+//         await api.post('/posts', { title, content });
+//         // 게시물 등록 성공 시 입력폼 초기화 
+//         setTitle('');
+//         setContent('');
+//         fetchPosts();
 
-    } catch(error) {
-        console.log('게시글 작성에 실패했어요.', error);
-        alert('게시글 작성에 실패했어요.');
-    }
-};
+//     } catch(error) {
+//         console.log('게시글 작성에 실패했어요.', error);
+//         alert('게시글 작성에 실패했어요.');
+//     }
+// };
 
 // 게시글 삭제 시 실행될 함수
+
 const handleDeletePost = async (postId) => {
     if (!window.confirm('게시물을 삭제하시겠어요?')) return;
     try {
@@ -92,29 +95,8 @@ const handleUpdateSubmit = async ( e, postId ) => {
     
     return (
         <div className="homepage">
-            <h3>블로그 메인페이지 </h3>
-            { isLoggedIn && (
-                <section className="post-creator">
-                    <h3>새 글 작성하기</h3>
-                    <form onSubmit={handlePostSubmit}>
-                        <input 
-                        className="form-input"
-                        type="text"
-                        placeholder="게시물 제목을 입력하세요."
-                        value={title}
-                        maxLength={50}
-                        onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <textarea 
-                        className="form-textarea"
-                        placeholder="내용을 입력하세요."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        />
-                        <button type="submit" className="button button-primary">등록</button>
-                    </form>
-                </section>
-            )}
+            <h1>블로그 메인페이지 </h1>
+            
             <section className="post-list">
             <h2>전체 게시글</h2>
             {
@@ -166,6 +148,11 @@ const handleUpdateSubmit = async ( e, postId ) => {
                 <p className="no-posts-message">등록된 게시물이 없습니다.</p>
             )}
         </section>
+        { isLoggedIn && (                
+                      <div className="write-post-link-container">
+                         <Link to="/write" className="button button-primary">새 글 작성하기</Link>
+                      </div>
+            )}
     </div>
     );
 }
