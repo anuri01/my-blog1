@@ -35,7 +35,12 @@
   min-height: 200px;
   padding: 1rem;
   outline: none; /* 포커스 시 외곽선 제거 */
+  
+  /* 👇 --- 경고 해결을 위한 핵심 CSS --- 👇 */
+  /* ProseMirror가 요구하는 white-space 속성입니다. */
+  white-space: pre-wrap;
 }
+
 
 /* Tiptap 에디터의 placeholder 스타일 */
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -44,4 +49,28 @@
   color: #757575;
   pointer-events: none;
   height: 0;
+}
+.color-input {
+  width: 24px;
+  height: 24px;
+  border: none;
+  padding: 0rem;
+  margin-right: 0.2rem;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle; /* 다른 버튼들과 세로 정렬을 맞춤 */
+}
+.font-size-select {
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.3rem;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.font-size-select:hover {
+  background-color: #f0f0f0;
 }

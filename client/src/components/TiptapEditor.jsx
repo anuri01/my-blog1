@@ -2,10 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
+import FontSize from '@tiptap/extension-font-size'; // 👈 1. FontSize 라이브러리 import
 import { Color } from "@tiptap/extension-color";
-import Underline from '@tiptap/extension-underline';
 import Placeholder from "@tiptap/extension-placeholder";
 import './TiptapEditor.css'; // 에디터와 메뉴바를 위한 CSS
+// import Underline from '@tiptap/extension-underline';
+// import { TextStyle as BaseTextStyle } from '@tiptap/extension-text-style';
+
+// const TextStyle = BaseTextStyle.extend({
+//   addAttributes() {
+//     return {
+//       ...this.parent?.(),
+//       fontSize: {
+//         default: null,
+//         parseHTML: element => element.style.fontSize || null,
+//         renderHTML: attributes => {
+//           if (!attributes.fontSize) {
+//             return {};
+//           }
+//           return {
+//             style: `font-size: ${attributes.fontSize}`,
+//           };
+//         },
+//       },
+//     };
+//   },
+// });
 
 // --- 메뉴바 컴포넌트 ---
 const MenuBar = ({ editor }) => {
@@ -13,16 +35,42 @@ const MenuBar = ({ editor }) => {
     return null;
   }
 
+  //글자 크기 목록
+  const fontSizes = ['12px', '14px', '16px', '18px', '24px'];
+
   return (
     <div className="menu-bar">
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={!editor.can().chain().focus().toggleBold().run()}
-        className={editor.isActive('bold') ? 'is-active' : ''}
+      {/* <select
+        onChange={(e) => editor.chain().focus().setMark('textStyle', { fontSize: e.target.value}).run()}
+        className="font-size-select"
       >
-        글자크기
-      </button>
+        <option value="">크기</option>
+        {fontSizes.map(size => (
+          <option key={size} value={size}>{size}</option>
+        ))}
+        </select> */}
+        <select
+  //       onChange={e => {
+  //   console.log('Font size changed:', e.target.value); // 디버깅용 로그
+  //   e.target.value && editor.chain().focus().setMark('textStyle', { fontSize: e.target.value }).run();
+    
+  // }}
+        onChange={e => e.target.value && editor.chain().focus().setFontSize(e.target.value).run()}
+        value={editor.getAttributes('textStyle').fontSize || ''}
+        className="font-size-select"
+      >
+        <option value="">크기</option>
+        {fontSizes.map(size => (
+          <option key={size} value={size}>{size}</option>
+        ))}
+      </select>
+      {/* --- 👇 글자 색상 변경 input 추가 --- */}
+      <input
+        type="color"
+        onInput={event => editor.chain().focus().setColor(event.target.value).run()}
+        value={editor.getAttributes('textStyle').color || '#000000'}
+        className="color-input"
+      />
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -63,13 +111,6 @@ const MenuBar = ({ editor }) => {
         취소선
       </button>
       {/* 여기에 다른 버튼들을 추가할 수 있습니다. */}
-      {/* --- 👇 글자 색상 변경 input 추가 --- */}
-      <input
-        type="color"
-        onInput={event => editor.chain().focus().setColor(event.target.value).run()}
-        value={editor.getAttributes('textStyle').color || '#000000'}
-        className="color-input"
-      />
     </div>
   );
 };
@@ -82,10 +123,10 @@ function TiptapEditor({ content, onChange }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      // 기본적인 텍스트 편집 기능 모음
       TextStyle,
       Color,
-      Underline,
+      FontSize,
+      // Underline,
       Placeholder.configure({
         placeholder: '내용을 입력하세요.',
       }),
