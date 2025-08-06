@@ -152,7 +152,7 @@ app.get('/api/posts/:id', async (req, res) => {
 // 작성된 게시글 등록
 app.post('/api/posts', authMiddleware, async(req, res) => {
     try {
-        console.log('서버가 받은 데이터 (req.body):', req.body);
+        // console.log('서버가 받은 데이터 (req.body):', req.body);
         const { title, content } = req.body;
         if (!title || !content) {
             return res.status(400).json({message:'게시물 제목과 내용은 필수사항이에요.'});

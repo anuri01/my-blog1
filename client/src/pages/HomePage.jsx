@@ -102,7 +102,7 @@ const handleUpdateSubmit = async ( e, postId ) => {
             {
             posts.length > 0 ? (
             posts.map(post => (
-                <article key={post._id} className="post-card">
+                <div key={post._id} className="post-card">
                     {editingPostId === post._id ? (
                         // ---- 수정 모드 UI ----
                         <form onSubmit={(e) => handleUpdateSubmit(e, post._id)} className="edit-post-form">
@@ -118,20 +118,22 @@ const handleUpdateSubmit = async ( e, postId ) => {
                                 onChange={(e) => setEditContent(e.target.value)}
                             />
                             <div className="edit-buttons">
+                                <button type="button" className="button button-secondary" onClick={() => setEditingPostId(null)}>취소</button>
                                 <button type="submit" className="button button-primary"> 저장</button>
-                                <button type="button" className="button" onClick={() => setEditingPostId(null)}>취소</button>
                             </div>
                         </form>
                     ) : (
                         // 일반 보기 UI
                 <>
+                <div className="post-item-info">
                 <Link to={`/post/${post._id}`} className="post-title-link">
-                <h3>{post.title}</h3>
+                <h3 className="post-title">{post.title}</h3>
                 </Link>
-                <p className="post-content">{post.content}</p>
-                <div className="post-meta">
-                <span>작성자: {post.author ? post.author.username : '알 수 없음'}</span>
-                <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                {/* <p className="post-content">{post.content}</p> */}
+                <div className="post-item-meta">
+                <span className="post-item-author">작성자: {post.author ? post.author.username : '알 수 없음'}</span>
+                <span className="post-item-date">{new Date(post.createdAt).toLocaleDateString()}</span>
+                </div>
                 </div>
                 {/* 👇 로그인한 사용자가 본인 글일 때만 수정/삭제 버튼 보이기 */}
                   {isLoggedIn && user?.id === post.author?._id && (
@@ -142,7 +144,7 @@ const handleUpdateSubmit = async ( e, postId ) => {
                 )}
                 </>
             )}
-                </article>
+                </div>
             )) 
         ) : (
                 <p className="no-posts-message">등록된 게시물이 없습니다.</p>
