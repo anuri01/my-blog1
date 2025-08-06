@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs';
 //const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
 import { populate } from 'dotenv';
+import Post from './models/Post.js'; // 👈 이 줄 추가
 
 //Express 앱 생성 및 설정
 const app = express();
@@ -37,17 +38,17 @@ userSchema.pre('save', async function(next) {
 });
 
 // 게시글(Post) 모델
-const postSchema = new mongoose.Schema({
-    // 포스트 제목, 포스트 내용, 작성자(userSchema 연결), 작성일(date) 필요.
-    // 추후 수정일 필요할 수 있음.
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, default: Date.now }
-});
+// const postSchema = new mongoose.Schema({
+//     // 포스트 제목, 포스트 내용, 작성자(userSchema 연결), 작성일(date) 필요.
+//     // 추후 수정일 필요할 수 있음.
+//     title: { type: String, required: true },
+//     content: { type: String, required: true },
+//     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+//     createdAt: { type: Date, default: Date.now }
+// });
 
 const User = mongoose.model('User', userSchema);
-const Post = mongoose.model('Post', postSchema);
+// const Post = mongoose.model('Post', postSchema);
 
 app.get('/api', (req, res) => {
     res.send('블로그 API 서버');
