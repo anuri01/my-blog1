@@ -23,7 +23,7 @@ function ProfilePage() {
     fetchUser();
   }, []);
   
-  //패스워드 변경 함숨
+  //패스워드 변경 함수
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -38,13 +38,13 @@ function ProfilePage() {
     }
   };
 
-  if (!user) return <div>잠시만 기다려주세요.</div>
+  if (!user) return <div className='loading-message'>잠시만 기다려주세요.</div>
 
   return (
     <div className="auth-page">
       <h1>내 프로필</h1>
       <div className="profile-info">
-        <strong>사용자 이름:</strong> {user.username}
+        <strong>사용자 이름 :</strong> {user.username}
       </div>
       <hr />
       <h3>비밀번호 변경</h3>

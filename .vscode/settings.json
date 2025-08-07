@@ -5,5 +5,5 @@
     "editor.wordWrap": "on",
     "workbench.colorTheme": "Default Dark+",
     "diffEditor.codeLens": true,
-    "editor.minimap.autohide": true
+    "editor.minimap.autohide": "mouseover"
 }

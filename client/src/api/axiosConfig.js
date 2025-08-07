@@ -21,7 +21,7 @@ api.interceptors.request.use(
             // 현재 시간과 토큰 만료시간 비교
             // decodedToken.exp는 초(second) 단위이므로, 1000을 곱해 밀리초(ms)로 바꿔줍니다.
             if(decodedToken.exp * 1000 < Date.now()) {
-                useUserStore.getState.logout();
+                useUserStore.getState().logout();
                 window.location.href = '/';
                 return Promise.reject(new Error('토큰이 만료되었습니다.'));
             }

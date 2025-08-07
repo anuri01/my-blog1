@@ -194,3 +194,9 @@ button.button-primary:hover {
   font-weight: 500;
 }
 
+.loading-message {
+  text-align: center;
+  padding: 2.5rem;
+  margin-top: 40px;
+  border-top: 1px solid #a3a0a0;
+}
