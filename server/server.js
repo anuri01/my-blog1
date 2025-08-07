@@ -7,7 +7,11 @@ import bcrypt from 'bcryptjs';
 //const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
 import { populate } from 'dotenv';
+
+// db 스키마 및 모델 분리
 import Post from './models/Post.js'; // 👈 이 줄 추가
+import User from './models/User.js'; // 👈 이 줄 추가
+import Comment from './models/Comment.js'; // 👈 이 줄 추가
 
 //Express 앱 생성 및 설정
 const app = express();
@@ -21,34 +25,6 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB에 연결됨'))
     .catch(err => console.error('MongoDB 연결 오류', err));
 
-// -- 데이터 모델 정의 ---
-
-// 사용자(User) 모델
-const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true},
-    password: { type: String, repuired: true }
-});
-
-// 사용자 정보 저장 시 비밀번호 암호화
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-});
-
-// 게시글(Post) 모델
-// const postSchema = new mongoose.Schema({
-//     // 포스트 제목, 포스트 내용, 작성자(userSchema 연결), 작성일(date) 필요.
-//     // 추후 수정일 필요할 수 있음.
-//     title: { type: String, required: true },
-//     content: { type: String, required: true },
-//     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-//     createdAt: { type: Date, default: Date.now }
-// });
-
-const User = mongoose.model('User', userSchema);
-// const Post = mongoose.model('Post', postSchema);
 
 app.get('/api', (req, res) => {
     res.send('블로그 API 서버');
@@ -218,6 +194,51 @@ app.delete('/api/posts/:id', authMiddleware, async( req, res ) => {
         res.status(500).json({message:'서버 오류 발생'});
     }
 });
+
+// 댓글 목록(게시물에 연결된 댓글만 표시한다.)
+app.get('/api/posts/:posId/comments', async(req, res) => {
+    try {
+    // req에서 게시물 id를 찾아 변수에 할당
+    const { PostId } = req.params;
+    // if(!PostId) {
+    //     return res.status(400).json({message: '게시물을 찾을 수 없습니다.'});
+    // }
+    // Comment 모델에서 'post' 필드가 postId가 일치하는 댓글을 찾음(findById를 쓸경우 댓글의 아이디를 찾는거임)
+    const comments = await Comment.find({post: PostId})
+    .populate('author', 'username')
+    .sort({createdAt: -1});
+
+    res.status(200).json(comments);
+    } catch (error) {
+        res.status(500).json({message: '서버 오류가 발생했습니다.', error});
+    } 
+});
+
+// 작성된 댓글 등록(로그인 필요)
+app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
+    try {
+        const { content } = req.body;
+        if (!content) { 
+            return res.status(400).json({message: '댓글 내용을 입력해 주세요.'});
+        }
+        const newComment = new Comment({
+            content,
+            author: req.user.id,
+            post: req.params.postId
+        });
+        await newComment.save();
+
+        const populateComment = await Comment.findById(newComment._id).populate('author', 'username');
+        res.status(201).json(populateComment);
+
+    } catch(error) {
+        res.status(500).json({message: '서버 오류가 발생했습니다.', error});
+    }
+});
+
+// 작성된 댓글 삭제
+
+// 작성된 댓글 수정(선택)
 
 // 서버실행
 app.listen(PORT, () => {
