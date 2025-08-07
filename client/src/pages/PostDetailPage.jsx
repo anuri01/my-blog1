@@ -30,7 +30,7 @@ function PostDetailPage() {
                 ]);
                 setPost(postRes.data); // 성공 시 받아온 데이터로 post 셋팅
                 setComments(commentRes.data); // 성공 시 받아온 데이터로 comments 셋팅
-            } catch (err) {
+            } catch  {
                 setError('게시물을 찾을 수 없습니다.'); // 실패 시 에러메시지 세팅
             } finally { // 결과에 상관없이 항상 실행되는 부분
                 setIsLoading(false); // API 요청 끝 -> 로딩중 스위치를 끔

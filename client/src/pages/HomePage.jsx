@@ -17,9 +17,9 @@ const [ posts, setPosts ] = useState([]);
 // const [ content, setContent ] = useState('');
 
 // 게시글 수정관련 상태 설정 추가
-const [ editingPostId, setEditingPostId ] = useState('null');
-const [ editTitle, setEditTitle ] = useState('');
-const [ editContent, setEditContent ] = useState('');
+// const [ editingPostId, setEditingPostId ] = useState('null');
+// const [ editTitle, setEditTitle ] = useState('');
+// const [ editContent, setEditContent ] = useState('');
 
 // 기능(함수) 정의
 // 서버로부터 모든 게시물을 불러옴
@@ -58,17 +58,17 @@ const handleDeletePost = async (postId) => {
 // }
 
 // 수정 게시글 등록 시 실행될 함수
-const handleUpdateSubmit = async ( e, postId ) => {
-    e.preventDefault();
-    try {
-        await api.put(`/posts/${postId}`, { title: editTitle, content: editContent });
-        setEditingPostId(null); // 수정모드 종료
-        fetchPosts();
-    } catch (error) {
-        console.error('게시글 수정에 실패했습니다.', error);
-        alert('게시글 수정에 실패했습니다.');
-    }
-};
+// const handleUpdateSubmit = async ( e, postId ) => {
+//     e.preventDefault();
+//     try {
+//         await api.put(`/posts/${postId}`, { title: editTitle, content: editContent });
+//         setEditingPostId(null); // 수정모드 종료
+//         fetchPosts();
+//     } catch (error) {
+//         console.error('게시글 수정에 실패했습니다.', error);
+//         alert('게시글 수정에 실패했습니다.');
+//     }
+// };
 
     
     return (
