@@ -1,4 +1,6 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import useUserStore from "../store/userStore";
 
 // 마이블로그 전용 axios인스턴스 생성 및 baseURL 설정
 const api = axios.create({
@@ -8,10 +10,20 @@ const api = axios.create({
 
 // 요청 인터셉트 추가
 api.interceptors.request.use(
-    // 요청 성공적으로 보내지기 전에 실해될 함수
+    // 요청 성공적으로 보내지기 전에 실행될 함수
     (config) => {
         const token = localStorage.getItem('token')
         if (token) {
+            // 토큰 해독
+            const decodedToken = jwtDecode('token');
+            // 현재 시간과 토큰 만료시간 비교
+            // decodedToken.exp는 초(second) 단위이므로, 1000을 곱해 밀리초(ms)로 바꿔줍니다.
+            if(decodedToken.exp * 1000 < Date.now()) {
+                useUserStore.getState.logout();
+                window.location.href = '/';
+                return Promise.reject(new Error('토큰이 만료되었습니다.'));
+            }
+            // 토큰이 유효하면 헤더에 토큰을 추가함. 
             config.headers.authorization = `Bearer ${token}`;
         }
         return config;
