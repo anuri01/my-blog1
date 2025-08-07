@@ -26,7 +26,7 @@ api.interceptors.request.use(
                 return Promise.reject(new Error('토큰이 만료되었습니다.'));
             }
             // 토큰이 유효하면 헤더에 토큰을 추가함. 
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.authorization = `Bearer ${token}`;
         }
         return config;
     },

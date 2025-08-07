@@ -5,7 +5,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import PostEditor from './pages/PostEditor';
 import PostDetailPage from './pages/PostDetailPage';
-// import ProflePage from './pages/ProfilePage';
+import ProfilePage from './pages/ProfilePage';
 import useUserStore from './store/userStore';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css'
@@ -52,7 +52,7 @@ const handleLogout = () => {
             <Route path='/write' element={<ProtectedRoute><PostEditor /></ProtectedRoute>} />
             <Route path='/edit/:postId' element={<ProtectedRoute><PostEditor /></ProtectedRoute>} />
             <Route path='/post/:postId' element={<PostDetailPage />} />
-            {/* <Route path='/profile' element={<ProfilePage />} /> */}
+            <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

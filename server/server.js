@@ -9,8 +9,8 @@ import jwt from 'jsonwebtoken';
 import { populate } from 'dotenv';
 
 // db 스키마 및 모델 분리
-import Post from './models/Post.js'; // 👈 이 줄 추가
 import User from './models/User.js'; // 👈 이 줄 추가
+import Post from './models/Post.js'; // 👈 이 줄 추가
 import Comment from './models/Comment.js'; // 👈 이 줄 추가
 
 //Express 앱 생성 및 설정
@@ -34,7 +34,7 @@ app.get('/api', (req, res) => {
 const authMiddleware = (req, res, next) => {
     // 사용자 요청헤더에서 토큰값을 꺼냄옴(Authorizarion은 클라이언트 측 사용자가 정한 이름) axiosConfig에 설정됨
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
         console.log('에러: 토큰 없음');
         return res.status(401).json({message:'인증 토큰이 필요합니다.'});
     }
@@ -246,6 +246,45 @@ app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
 // 작성된 댓글 삭제
 
 // 작성된 댓글 수정(선택)
+
+//사용자 정보(프로필)
+app.get('/api/users/me', authMiddleware, async( req, res ) => {
+     try {
+        const userId = req.user.id;
+        const user = await User.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({message:'사용자를 찾을 수 없습니다.'});
+        }
+        res.json(user);
+
+    } catch (error) {
+        res.status(500).json({message:'서버 오류가 발생했습니다.'});
+    }
+});
+
+//비밀번호 수정
+app.put('/api/users/password', authMiddleware, async ( req, res ) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        if(!currentPassword || !newPassword) {
+            return res.status(400).json("모든 항목을 입력해 주세요.");
+        }
+        const user = await User.findById(req.user.id);
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        const isSame = await bcrypt.compare(newPassword, user.password);
+        if(!isMatch) {
+            return res.status(400).json({message: '기존 비밀번호가 일치하지 않습니다.'});
+        } else if(isSame) {
+            return res.status(400).json({message: '기존 비밀번호와 동일한 비밀번호는 사용할수 없습니다.'});
+        }
+        user.password = newPassword;
+        await user.save();
+        res.json({message:'비밀번호가 변경되었습니다.'})
+
+    } catch (error) {
+        res.status(500).json({message:'서버 오류가 발생했습니다.'});
+    }
+});
 
 // 서버실행
 app.listen(PORT, () => {
