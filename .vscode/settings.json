@@ -1,0 +1,9 @@
+{
+    "editor.tabSize": 2,
+    "editor.mouseWheelZoom": true,
+    "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+    "editor.wordWrap": "on",
+    "workbench.colorTheme": "Default Dark+",
+    "diffEditor.codeLens": true,
+    "editor.minimap.autohide": true
+}
