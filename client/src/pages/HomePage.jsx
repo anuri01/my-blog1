@@ -81,27 +81,6 @@ const handleUpdateSubmit = async ( e, postId ) => {
             posts.length > 0 ? (
             posts.map(post => (
                 <div key={post._id} className="post-card">
-                    {editingPostId === post._id ? (
-                        // ---- 수정 모드 UI ----
-                        <form onSubmit={(e) => handleUpdateSubmit(e, post._id)} className="edit-post-form">
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={editTitle}
-                                onChange={(e) => setEditTitle(e.target.value)}
-                            />
-                            <textarea 
-                                className="form-textarea"
-                                value={editContent}
-                                onChange={(e) => setEditContent(e.target.value)}
-                            />
-                            <div className="edit-buttons">
-                                <button type="button" className="button button-secondary" onClick={() => setEditingPostId(null)}>취소</button>
-                                <button type="submit" className="button button-primary"> 저장</button>
-                            </div>
-                        </form>
-                    ) : (
-                        // 일반 보기 UI
                 <>
                 <div className="post-item-info">
                 <Link to={`/post/${post._id}`} className="post-title-link">
@@ -122,7 +101,6 @@ const handleUpdateSubmit = async ( e, postId ) => {
                 </div>
                 )}
                 </>
-            )}
                 </div>
             )) 
         ) : (

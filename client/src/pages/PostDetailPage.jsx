@@ -94,11 +94,11 @@ function PostDetailPage() {
             />
             <div className="util-button-group">
             <Link to="/" className="action-button">목록</Link>
-            <div className="author-actions">
+            { isLoggedIn && user?.id === post.author?._id && <div className="author-actions">
             <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
             {/* <button onClick={() => handleEditClick(post)}>수정</button> */}
-            <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
-            </div>
+            <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button> 
+            </div> }
             </div>
             <section className="comments-section">
                 <h4> 댓글 ({comments.length})</h4>

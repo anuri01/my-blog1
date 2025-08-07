@@ -33,6 +33,8 @@
 /* Tiptap 에디터의 실제 입력 영역 스타일 */
 .tiptap-container .ProseMirror {
   min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
   padding: 1rem;
   outline: none; /* 포커스 시 외곽선 제거 */
   

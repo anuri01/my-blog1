@@ -62,9 +62,9 @@
 }
 
 .comments-section {
-  margin-top: 3rem;
-  border-top: 1px solid #eee;
-  padding-top: 2rem;
+  /* margin-top: 3rem; */
+  /* border-top: 1px solid #eee; */
+  padding-top: 1rem;
 }
 
 .comment-form {
@@ -109,9 +109,9 @@
   display: flex;
   justify-content: space-between; /* 버튼들을 양쪽 끝으로 정렬 */
   align-items: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  /* margin-top: 2rem; */
+  padding-top: 1rem;
+  /* border-top: 1px solid #eee; */
 }
 
 .author-actions {
