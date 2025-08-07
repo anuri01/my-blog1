@@ -21,7 +21,7 @@
 .post-body {
   padding-top: 1rem;
   padding-bottom: 1rem;
-  font-size: 0.8rem;
+  /* font-size: 0.8rem; */
   line-height: 1rem;
   color: #333;
   border-bottom: 1px solid #e0e0e0;
@@ -73,7 +73,7 @@
   margin-bottom: 2rem;
 }
 
-.comment-form .button {
+.comment-form .button-medium {
   align-self: flex-end; /* 버튼을 오른쪽으로 정렬 */
   margin-top: 0.5rem;
 }
@@ -103,4 +103,18 @@
   /* margin: 0; */
   color: #333;
   white-space: pre-wrap; /* \n 줄바꿈을 그대로 보여줌 */
+}
+
+.util-button-group {
+  display: flex;
+  justify-content: space-between; /* 버튼들을 양쪽 끝으로 정렬 */
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.author-actions {
+  display: flex;
+  gap: 0.3rem; /*수정/삭제 버튼 사이의 간격 */
 }

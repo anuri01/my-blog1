@@ -73,7 +73,9 @@ a {
   cursor: pointer;
   padding: 0;
 }
-
+.navigation button:hover {
+  color: #0db223;
+}
 /* 메인 컨텐츠 영역 */
 .app-main {
   padding: 0rem 1.5rem 1.5rem 1.5rem;
@@ -90,6 +92,21 @@ a {
   border-radius: 8px;
   border: 1px solid transparent;
   font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button-medium {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2rem;
+  padding: 0 1.2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;

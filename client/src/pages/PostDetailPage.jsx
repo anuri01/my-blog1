@@ -47,12 +47,10 @@ function PostDetailPage() {
       alert('게시글이 삭제되었습니다.');
       navigate('/'); // 삭제 성공 후 홈으로 이동
     } catch (error) {
-      alert('게시글 삭제에 실패했습니다.');
+      alert('게시글 삭제에 실패했습니다.', error);
     }
   };
     
-
-
     //댓글 등록 요청 함수
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
@@ -95,10 +93,12 @@ function PostDetailPage() {
             dangerouslySetInnerHTML={{ __html: post.content }} 
             />
             <div className="util-button-group">
-            <Link to="/" className="back-to-list">목록으로 돌아가기</Link>
-             <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
+            <Link to="/" className="action-button">목록</Link>
+            <div className="author-actions">
+            <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
             {/* <button onClick={() => handleEditClick(post)}>수정</button> */}
             <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
+            </div>
             </div>
             <section className="comments-section">
                 <h4> 댓글 ({comments.length})</h4>
@@ -110,7 +110,7 @@ function PostDetailPage() {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="댓글 내용을 입력하세요."
                         />
-                        <button type="submit" className="button button-primary-single">댓글 등록</button>
+                        <button type="submit" className="button-medium button-primary-single">댓글 등록</button>
                     </form>
                 )}
 

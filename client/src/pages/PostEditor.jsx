@@ -25,7 +25,7 @@ useEffect(() => {
             } catch (error) {
                 console.error("게시물 정보를 불러오지 못했습니다.", error);
                 alert('게시물 정보를 불러오지 못했습니다.');
-                navigate('/') // 홈으로 바로 이당
+                navigate('/') // 홈으로 바로 이동
             }
         };
         fetchPostData();
@@ -62,6 +62,10 @@ const handlePostSubmit = async (e) => {
     }
 };
 
+const handleCancle = () => {
+    // 뒤로가기 기능을 실행함
+    navigate(-1);
+}
 return (
         <div className="post-editor">
             {/* isEditMode 값에 따라 제목을 동적으로 변경 */}
@@ -85,6 +89,7 @@ return (
                         setContent(newContent);
                         }}
                         />
+                        {/* textarea를 사용할 경우 예시 */}
                         {/* <textarea 
                         className="form-textarea"
                         placeholder="내용을 입력하세요."
@@ -92,7 +97,8 @@ return (
                         onChange={(e) => setContent(e.target.value)}
                         /> */}
                         <div className="button-group">
-                        <Link to='/' className="button button-secondary">취소</Link>
+                        <button className="button button-secondary" type="button" onClick={handleCancle}>취소</button>
+                        {/* <Link to='/' className="button button-secondary">취소</Link> */}
                         <button type="submit" className="button button-primary">
                             {isEditMode ? '수정 완료' : '등록'}
                         </button>
