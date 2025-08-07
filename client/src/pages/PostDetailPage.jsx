@@ -21,11 +21,11 @@ function PostDetailPage() {
     // 해당 게시물 상세 및 댓글 가져오기. Promise.all([...]) 을 이용해 비동기 요청을 한번에 보내서 받기
     useEffect(() => {
         const fetchPostAndComments = async () => {
+            setIsLoding(true);
             try {
-                setIsLoding(true);
                 const [ postRes, commentRes ] = await Promise.all([
                     api.get(`/posts/${postId}`),
-                    api.get(`posts/${postId}/comments`),
+                    api.get(`/posts/${postId}/comments`),
                 ]);
                 setPost(postRes.data); // 성공 시 받아온 데이터로 post 셋팅
                 setComments(commentRes.data); // 성공 시 받아온 데이터로 comments 셋팅
@@ -51,7 +51,7 @@ function PostDetailPage() {
             console.error('댓글 등록에 실패했습니다.', error);
             alert('댓글 등록에 실패했어요.');
         }
-    }
+    };
 
     if(isLoading) {
         return <div>로딩 중...</div>; // 로딩중 일떄 표시
@@ -81,23 +81,29 @@ function PostDetailPage() {
                     <form onSubmit={handleCommentSubmit} className="comment-form">
                         <textarea 
                         className="form-textarea"
-                        placeholder="댓글 내용을 입력하세요."
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="댓글 내용을 입력하세요."
                         />
                         <button type="submit" className="button button-primary">댓글 등록</button>
                     </form>
                 )}
+
                 { comments && comments.length > 0 ? (
                     <div className="comment-list">
-                        <div className="comment-item">
-                            <span className="comment-meta"></span>
-                            <span className="comment-body"></span>
+                        { comments.map(comment => ( 
+                        <div key={comment._id} className="comment-item" >
+                            <div className="comment-meta">
+                                <span className="comment-author">작성자: { comment.author?.username || 알수없음 }</span>
+                                <span className="comment-date">작성일: { new Date(comment.createdAt).toLocaleDateString() }</span>
+                             </div>
+                            <p className="comment-body">{ comment.content }</p>
                         </div>
+                        ))}
                 
                </div>
                ) : (
-               <h2 style={{textAlign: "center", padding: "4rem", marginTop: "50px", borderTop: "1px solid #a3a0a0"}}>등록된 댓글이 없습니다.</h2>)}
+               <h2 className="no-comments-message">등록된 댓글이 없습니다.</h2>)}
 
             </section>
                         {/* <div className="post-body">

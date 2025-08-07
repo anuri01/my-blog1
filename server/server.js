@@ -35,17 +35,21 @@ const authMiddleware = (req, res, next) => {
     // 사용자 요청헤더에서 토큰값을 꺼냄옴(Authorizarion은 클라이언트 측 사용자가 정한 이름) axiosConfig에 설정됨
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(400).json({message:'인증 정보가 없습니다.'});
+        console.log('에러: 토큰 없음');
+        return res.status(401).json({message:'인증 토큰이 필요합니다.'});
     }
     // 실제 토큰 값만 저장 공백을 기준으로 나누고 2번째 배열 저장
     const token = authHeader.split(' ')[1];
     try {
+        console.log('토큰 검증시도');
         // 토큰값 검증하기 해당 사용자에게 발행한 토큰이 맞는지 유효기간이 지나지 않았는지 검증.(verity 메소드 사용 및 씨크리키를 통해 검증)
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // 검증이 완료되면 req.user 정보에 사용자 id와 username 추가해 다음 스텝을 진행할때 사용(username은 클라이언트에서 넘겨주기 떄문에 없어도 될 것으로 생각됨.)
         req.user = { id: decoded.id, username: decoded.username };
+        console.log('토큰 검증 성공');
         next();
         }  catch (error) {
+            console.log('토큰유효하지 않음');
         return res.status(401).json({message: '유효하지 않은 토큰입니다.'});
     }
 };
@@ -196,15 +200,9 @@ app.delete('/api/posts/:id', authMiddleware, async( req, res ) => {
 });
 
 // 댓글 목록(게시물에 연결된 댓글만 표시한다.)
-app.get('/api/posts/:posId/comments', async(req, res) => {
+app.get('/api/posts/:postId/comments', async(req, res) => {
     try {
-    // req에서 게시물 id를 찾아 변수에 할당
-    const { PostId } = req.params;
-    // if(!PostId) {
-    //     return res.status(400).json({message: '게시물을 찾을 수 없습니다.'});
-    // }
-    // Comment 모델에서 'post' 필드가 postId가 일치하는 댓글을 찾음(findById를 쓸경우 댓글의 아이디를 찾는거임)
-    const comments = await Comment.find({post: PostId})
+    const comments = await Comment.find({post: req.params.postId})
     .populate('author', 'username')
     .sort({createdAt: -1});
 
@@ -216,6 +214,7 @@ app.get('/api/posts/:posId/comments', async(req, res) => {
 
 // 작성된 댓글 등록(로그인 필요)
 app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
+    console.log('api 라우트 전달');
     try {
         const { content } = req.body;
         if (!content) { 
@@ -226,12 +225,20 @@ app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
             author: req.user.id,
             post: req.params.postId
         });
+
+         // --- 2. 저장 직전 로그 ---
+        console.log('--- 5. DB에 저장을 시도합니다... ---');
+
         await newComment.save();
+
+         // --- 3. 저장 성공 로그 ---
+        console.log('--- 6. DB 저장 성공! ---');
 
         const populateComment = await Comment.findById(newComment._id).populate('author', 'username');
         res.status(201).json(populateComment);
 
     } catch(error) {
+        console.error("!!! 댓글 저장 중 에러 발생 !!!", error);
         res.status(500).json({message: '서버 오류가 발생했습니다.', error});
     }
 });

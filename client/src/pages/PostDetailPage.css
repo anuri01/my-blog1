@@ -52,3 +52,17 @@
   color: #079ae3;
 }
 
+/* 댓글목록 부분 스타일 */
+
+.no-comments-message {
+  text-align: center;
+  padding: 2.5rem;
+  margin-top: 40px;
+  border-top: 1px solid #a3a0a0;
+}
+
+.comments-section {
+  margin-top: 3rem;
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+}
