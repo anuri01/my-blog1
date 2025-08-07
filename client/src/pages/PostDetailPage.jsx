@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore"; // 로그인 상태 확인
 import './PostDetailPage.css';
@@ -15,7 +15,8 @@ function PostDetailPage() {
 
     // useParams 훅을 통해 url에서 게시물 id를 가져옴
     const { postId } = useParams();
-    const { isLoggedIn } = useUserStore(); // 로그인 상태 가져오기
+    const { isLoggedIn, user } = useUserStore(); // 로그인 상태 가져오기
+    const navigate = useNavigate();
 
     // 기능 함수정의
     // 해당 게시물 상세 및 댓글 가져오기. Promise.all([...]) 을 이용해 비동기 요청을 한번에 보내서 받기
@@ -37,7 +38,21 @@ function PostDetailPage() {
         };
         fetchPostAndComments();
     }, [postId]);
+
+    // 👇 게시글 삭제 함수 추가
+  const handleDeletePost = async () => {
+    if (!window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) return;
+    try {
+      await api.delete(`/posts/${postId}`);
+      alert('게시글이 삭제되었습니다.');
+      navigate('/'); // 삭제 성공 후 홈으로 이동
+    } catch (error) {
+      alert('게시글 삭제에 실패했습니다.');
+    }
+  };
     
+
+
     //댓글 등록 요청 함수
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
@@ -79,7 +94,12 @@ function PostDetailPage() {
             className="post-body"
             dangerouslySetInnerHTML={{ __html: post.content }} 
             />
+            <div className="util-button-group">
             <Link to="/" className="back-to-list">목록으로 돌아가기</Link>
+             <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
+            {/* <button onClick={() => handleEditClick(post)}>수정</button> */}
+            <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
+            </div>
             <section className="comments-section">
                 <h4> 댓글 ({comments.length})</h4>
                 { isLoggedIn && (
