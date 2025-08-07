@@ -33,11 +33,11 @@ const useUserStore = create((set) => { // 로직을 통해 state(상태)가 결�
   return {
     ...initialState,
     setToken: (token) => {
-      const decodedUser = jwtDecode(token);
+      const decodedToken = jwtDecode(token);
       localStorage.setItem('token', token);
       //  로그인 시, 현재 시간을 함께 저장합니다. => 토큰의 exp와 비교하기 때문에 필요없어짐
       // localStorage.setItem('loginTime', new Date().getTime());
-      set({ token, isLoggedIn: true, user: decodedUser });
+      set({ token, isLoggedIn: true, user: decodedToken });
     },
     logout: () => {
       // 로그아웃 시, 토큰과 시간 기록을 모두 삭제합니다. 시간 기록은 필요없어짐
