@@ -7,7 +7,7 @@ import './PostDetailPage.css';
 function PostDetailPage() {
     // 게시글 상세페이지에 사용할 상태 설정(게시글, 게시글 불러오는중, 에러)
     const [ post, setPost ] = useState(null);
-    const [ isLoading, setIsLoding ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState('');
     // 댓글 상태 설정 추가
     const [ comments, setComments ] = useState([]); // 댓글 목록 상태
@@ -21,7 +21,7 @@ function PostDetailPage() {
     // 해당 게시물 상세 및 댓글 가져오기. Promise.all([...]) 을 이용해 비동기 요청을 한번에 보내서 받기
     useEffect(() => {
         const fetchPostAndComments = async () => {
-            setIsLoding(true);
+            setIsLoading(true);
             try {
                 const [ postRes, commentRes ] = await Promise.all([
                     api.get(`/posts/${postId}`),
@@ -32,7 +32,7 @@ function PostDetailPage() {
             } catch (err) {
                 setError('게시물을 찾을 수 없습니다.'); // 실패 시 에러메시지 세팅
             } finally { // 결과에 상관없이 항상 실행되는 부분
-                setIsLoding(false); // API 요청 끝 -> 로딩중 스위치를 끔
+                setIsLoading(false); // API 요청 끝 -> 로딩중 스위치를 끔
             }
         };
         fetchPostAndComments();
@@ -59,7 +59,12 @@ function PostDetailPage() {
     if(error) {
         return <div>{error} <Link to="/">홈으로</Link></div>; // 에러가 났을때 이 ui만 표시
     }
-    
+    // post가 아직 null일 경우를 대비한 안전장치
+    if (!post) {
+    return null; 
+    }
+
+
     return (
         <article className="post-detail">
             <header className="post-header">
@@ -85,7 +90,7 @@ function PostDetailPage() {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="댓글 내용을 입력하세요."
                         />
-                        <button type="submit" className="button button-primary">댓글 등록</button>
+                        <button type="submit" className="button button-primary-single">댓글 등록</button>
                     </form>
                 )}
 
@@ -94,7 +99,7 @@ function PostDetailPage() {
                         { comments.map(comment => ( 
                         <div key={comment._id} className="comment-item" >
                             <div className="comment-meta">
-                                <span className="comment-author">작성자: { comment.author?.username || 알수없음 }</span>
+                                <span className="comment-author">작성자: { comment.author?.username || '알수없음' }</span>
                                 <span className="comment-date">작성일: { new Date(comment.createdAt).toLocaleDateString() }</span>
                              </div>
                             <p className="comment-body">{ comment.content }</p>

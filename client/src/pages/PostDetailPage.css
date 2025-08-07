@@ -66,3 +66,41 @@
   border-top: 1px solid #eee;
   padding-top: 2rem;
 }
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.comment-form .button {
+  align-self: flex-end; /* 버튼을 오른쪽으로 정렬 */
+  margin-top: 0.5rem;
+}
+
+.comment-item {
+  padding: 1rem;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #888;
+}
+
+.comment-author {
+  font-weight: bold;
+}
+
+.comment-body {
+  /* margin: 0; */
+  color: #333;
+  white-space: pre-wrap; /* \n 줄바꿈을 그대로 보여줌 */
+}
