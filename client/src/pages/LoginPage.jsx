@@ -52,7 +52,6 @@ function LoginPage() {
                 <input className="signup-form-input" type='password' placeholder="비밀번호" value={password} maxLength={21} onChange={ (e) => setPassword(e.target.value)}></input>
                 <button type='submit' className="button button-primary-single">로그인</button>
             </form>
-            {error && <p className="error-message">{error}</p>}
 
             {/* --- 👇 네이버 로그인 버튼 (새로 추가) --- */}
             <div className="social-login">
@@ -62,6 +61,7 @@ function LoginPage() {
                 </a>
             </div>
 
+            {error && <p className="error-message">{error}</p>}
             <p className="auth-p">계정이 없으신가요? <Link to="/signup">회원가입</Link></p>
         </>
     );
