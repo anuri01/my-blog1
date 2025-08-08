@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axiosConfig';
+import useUserStore from '../store/userStore';
 import './AuthPage.css'; // 공통 스타일 재사용
 
 function ProfilePage() {
@@ -9,6 +10,8 @@ function ProfilePage() {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+
+  const { logout } = useUserStore();
   
   // 사용자 정보 초기 셋팅
   useEffect(() => {
@@ -33,6 +36,8 @@ function ProfilePage() {
       setMessage(response.data.message);
       setCurrentPassword('');
       setNewPassword('');
+      logout();
+      window.location.href='/';
     } catch (err) {
       setError(err.response.data.message);
     }

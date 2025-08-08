@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
@@ -10,9 +10,16 @@ function LoginPage() {
     const [ password, setPassword ] = useState('');
     const [ error, setError ] = useState('');
     
-    // 2. 사용 컴포터는(기능) 셋팅
+    // 2. 사용 컴포넌트(기능) 셋팅
     const navigate = useNavigate();
-    const { setToken } = useUserStore();
+    const { isLoggedIn, setToken } = useUserStore();
+
+    // 로그인한 사용자가 접근 시 메인페이지로 리다이렉트(app.jsx 라우트에서 이미 처리했지만 페이지 내에서 상태가 바뀔경우를 대비해 추가)
+    useEffect( () => {
+        if( isLoggedIn ) {
+            navigate('/');
+        }
+    }, [isLoggedIn, navigate]);
     
     // 3. 로그인 요청 함수
     const handleSubmit = async(e) => {

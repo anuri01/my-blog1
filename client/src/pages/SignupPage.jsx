@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import axios from "axios";
 import api from "../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
+import useUserStore from "../store/userStore";
 import { validateUsername, validatePassword } from "../utils/validation";
 import './AuthPage.css'; // 로그인/회원가입 페이지 공통 스타일
 
@@ -11,6 +12,14 @@ function SignupPage() {
     const [ password, setPassword ] = useState('');
     const [ error, setError ] = useState('');
     const navigate = useNavigate();
+    const { isLoggedIn } = useUserStore();
+
+      // 로그인한 사용자가 접근 시 메인페이지로 리다이렉트(app.jsx 라우트에서 이미 처리했지만 페이지 내에서 상태가 바뀔경우를 대비해 추가)
+        useEffect( () => {
+            if( isLoggedIn ) {
+                navigate('/');
+            }
+        }, [isLoggedIn, navigate]);
 
     // 가입정보 제출 함수
     const handleSubmit = async (e) => {
