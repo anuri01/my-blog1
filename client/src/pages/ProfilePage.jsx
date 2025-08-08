@@ -25,7 +25,19 @@ function ProfilePage() {
     };
     fetchUser();
   }, []);
-  
+
+  useEffect(() => {
+  if (error && error !== '') { // 빈 문자열이 아닐 때만 alert 호출
+    alert(error);
+  }
+}, [error]);
+
+useEffect(() => {
+  if (message && message !== '') { // 빈 문자열이 아닐 때만 alert 호출
+    alert(message);
+  }
+}, [message]);
+
   //패스워드 변경 함수
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -36,8 +48,10 @@ function ProfilePage() {
       setMessage(response.data.message);
       setCurrentPassword('');
       setNewPassword('');
+      setTimeout(() => {
       logout();
       window.location.href='/';
+      }, 1000) // 1초 지연
     } catch (err) {
       setError(err.response.data.message);
     }
@@ -70,8 +84,9 @@ function ProfilePage() {
         />
         <button type="submit" className="auth-button button-primary-single">변경하기</button>
       </form>
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
+      {/* useEffect를 통해 처리 */}
+      {/* {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>} */}
     </div>
   );
 }

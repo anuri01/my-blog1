@@ -267,7 +267,7 @@ app.put('/api/users/password', authMiddleware, async ( req, res ) => {
     try {
         const { currentPassword, newPassword } = req.body;
         if(!currentPassword || !newPassword) {
-            return res.status(400).json("모든 항목을 입력해 주세요.");
+            return res.status(400).json({message: "모든 항목을 입력해 주세요."});
         }
         const user = await User.findById(req.user.id);
         const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -279,7 +279,7 @@ app.put('/api/users/password', authMiddleware, async ( req, res ) => {
         }
         user.password = newPassword;
         await user.save();
-        res.json({message:'비밀번호가 변경되었습니다.'})
+        res.status(200).json({message:'비밀번호가 변경되었습니다.'})
 
     } catch (error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
