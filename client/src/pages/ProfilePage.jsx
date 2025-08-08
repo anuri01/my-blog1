@@ -51,7 +51,7 @@ useEffect(() => {
       setTimeout(() => {
       logout();
       window.location.href='/';
-      }, 1000) // 1초 지연
+      }, 500) // 0.5초 지연
     } catch (err) {
       setError(err.response.data.message);
     }
