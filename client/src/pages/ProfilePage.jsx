@@ -65,25 +65,30 @@ useEffect(() => {
       <div className="profile-info">
         <strong>사용자 이름 :</strong> {user.username}
       </div>
-      <hr />
-      <h3>비밀번호 변경</h3>
-      <form onSubmit={handlePasswordChange}>
-        <input
-          className="form-input"
-          type="password"
-          placeholder="기존 비밀번호"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-        />
-        <input
-          className="form-input"
-          type="password"
-          placeholder="새 비밀번호"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <button type="submit" className="auth-button button-primary-single">변경하기</button>
-      </form>
+      {/* 네이버 로그인 사용자가 아닌 경우에만 비밀번호 변경 UI 표시 */}
+      {!user.naverId && (
+        <>
+          <hr />
+          <h3>비밀번호 변경</h3>
+          <form onSubmit={handlePasswordChange}>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="기존 비밀번호"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <input
+              className="form-input"
+              type="password"
+              placeholder="새 비밀번호"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button type="submit" className="auth-button button-primary-single">변경하기</button>
+          </form>
+        </>
+      )}
       {/* useEffect를 통해 처리 */}
       {/* {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>} */}
