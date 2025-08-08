@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
 import './HomePage.css';
@@ -11,6 +11,10 @@ const { isLoggedIn, user } = useUserStore();
 // 관리할 상태 설정
 // 목록은 배열이므로 빈배열로 초기화
 const [ posts, setPosts ] = useState([]);
+const [ currentPage, setCurrentPage ] = useState(1);
+const [ totalPages, setTotalPages ] = useState(1);
+const [ searchParams, setSearchParams ] = useSearchParams();
+
 
 // '새 글 작성' 관련 상태(title, content)와 함수(handlePostSubmit)는 여기서 삭제됩니다.
 // const [ title, setTitle ] = useState('');
@@ -23,19 +27,29 @@ const [ posts, setPosts ] = useState([]);
 
 // 기능(함수) 정의
 // 서버로부터 모든 게시물을 불러옴
-const fetchPosts = async () => {    
+const fetchPosts = async (page) => {    
     try{
-        const response = await api.get('/posts');
-        setPosts(response.data);
+        const response = await api.get(`/posts/?page=${page}&limit=5)`);
+        const { posts, currentPage, totalPages } = response.data;
+        setPosts(posts);
+        setCurrentPage(currentPage);
+        setTotalPages(totalPages);
+
     } catch (error) {
         console.error("게시물을 불러오는데 실패했습니다.", error);
     }
 };
 
+// seatchParams hook을 사용해 url상 페이지 자져오기
 useEffect(() => {
-    fetchPosts();
- }, []);
+    const page = searchParams.get('page') || 1;
+    fetchPosts(page);
+ }, [searchParams]);
 
+// 페이지 이동 함수 추가 
+const handlePageChange = (page) => {
+    setSearchParams( { page: page });
+}
 
 // 게시글 삭제 시 실행될 함수
 const handleDeletePost = async (postId) => {
@@ -102,11 +116,24 @@ const handleDeletePost = async (postId) => {
                 )}
                 </>
                 </div>
-            )) 
+            ))
+
         ) : (
                 <p className="no-posts-message">등록된 게시물이 없습니다.</p>
             )}
         </section>
+        <div className="pagination">
+            { Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={ `page-button ${currentPage === page ? 'active' : ''}` }
+                >
+                  {page}
+                </button>
+            ))}
+        </div>
+       
         { isLoggedIn && (                
                       <div className="write-post-link-container">
                          <Link to="/write" className="button-medium button-primary-single">새 글 작성하기</Link>

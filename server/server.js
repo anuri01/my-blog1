@@ -105,10 +105,20 @@ app.post('/api/users/login', async(req,res) => {
 // 게시글 목록
 app.get('/api/posts', async(req, res) => {
     try {
+        const page = parseInt(req.query.page || '1');
+        const limit = parseInt(req.query.limit || '10');
+        const skip = (page - 1) * limit;
         const posts = await Post.find({})
+        .sort({createdAt: -1 })
         .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
-        .sort({createdAt: -1 });
-        res.json(posts);
+        .skip(skip)
+        .limit(limit);
+    const totalPosts = await Post.countDocuments();
+    const totalPages = Math.ceil(totalPosts / limit);
+    res.json({ posts,
+               currentPage: page,
+               totalPages,
+             });
     } catch(error) {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
     }

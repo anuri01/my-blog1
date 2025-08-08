@@ -7,6 +7,19 @@ const postSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+postSchema.pre('findOneAndDelete', async function(next) {
+  try {
+    // this.getQuery()를 통해 현재 쿼리의 조건(예: { _id: '...' })을 가져올 수 있습니다.
+    const postToDelete = await this.model.findOne(this.getQuery());
+    
+    // Comment 모델에서 해당 게시글(post)의 ID를 가진 댓글들을 모두 삭제합니다.
+    await mongoose.model('Comment').deleteMany({ post: postToDelete._id });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 const Post = mongoose.model('Post', postSchema);
 
 export default Post;

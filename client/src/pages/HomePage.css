@@ -207,6 +207,28 @@
   margin-left: 1rem;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.page-button {
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.page-button.active {
+  background-color: #333;
+  color: white;
+  border-color: #333;
+}
+
 /* 작성자 텍스트를 위한 클래스 */
 .post-item-author {
   /* 나중에 필요하면 여기에 작성자만 위한 스타일을 추가할 수 있습니다. */
