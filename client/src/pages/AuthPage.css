@@ -37,3 +37,19 @@ h3 {
 .signup-form-input:focus {
   border-color: #2f95df;
 }
+
+.auth-button {
+  float: right;
+  /* margin-top: 1rem; */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2rem;
+  padding: 0 1.2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}

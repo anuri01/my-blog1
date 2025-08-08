@@ -63,7 +63,7 @@ function ProfilePage() {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-        <button type="submit" className="auth-button">변경하기</button>
+        <button type="submit" className="auth-button button-primary-single">변경하기</button>
       </form>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
