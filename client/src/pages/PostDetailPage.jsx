@@ -12,6 +12,7 @@ function PostDetailPage() {
     // 댓글 상태 설정 추가
     const [ comments, setComments ] = useState([]); // 댓글 목록 상태
     const [ newComment, setNewComment ] = useState(''); // 새 댓글 입력창 상태
+    const [ visibleCommentsCount, setVisibleCommentsCount ] = useState(5); // 보이는 댓글 개수
 
     // useParams 훅을 통해 url에서 게시물 id를 가져옴
     const { postId } = useParams();
@@ -66,6 +67,15 @@ function PostDetailPage() {
         }
     };
 
+    // 더보기 버튼 클릭 함수
+    const handleLoadMoreComments = () => {
+        setVisibleCommentsCount(prev => prev + 5);
+    };
+
+    // 현재 표시할 댓글들 계산
+    const visibleComments = comments.slice(0, visibleCommentsCount);
+    const hasMoreComments = comments.length > visibleCommentsCount;
+
     if(isLoading) {
         return <div>로딩 중...</div>; // 로딩중 일떄 표시
     }
@@ -116,7 +126,7 @@ function PostDetailPage() {
 
                 { comments && comments.length > 0 ? (
                     <div className="comment-list">
-                        { comments.map(comment => ( 
+                        { visibleComments.map(comment => ( 
                         <div key={comment._id} className="comment-item" >
                             <div className="comment-meta">
                                 <span className="comment-author">작성자: { comment.author?.username || '알수없음' }</span>
@@ -126,6 +136,17 @@ function PostDetailPage() {
                         </div>
                         ))}
                 
+                        {/* 더보기 버튼과 댓글 개수 표시 */}
+                        {hasMoreComments && (
+                            <div className="comment-pagination">
+                                <button 
+                                    className="load-more-button" 
+                                    onClick={handleLoadMoreComments}
+                                >
+                                    더보기 ▼ {visibleCommentsCount}/{comments.length}
+                                </button>
+                            </div>
+                        )}
                </div>
                ) : (
                <h2 className="no-comments-message">등록된 댓글이 없습니다.</h2>)}

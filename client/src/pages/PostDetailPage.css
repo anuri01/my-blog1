@@ -119,3 +119,41 @@
   display: flex;
   gap: 0.3rem; /*수정/삭제 버튼 사이의 간격 */
 }
+
+/* 댓글 페이지네이션 스타일 */
+.comment-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+}
+
+.load-more-button {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.load-more-button:hover {
+  background-color: #f8f9fa;
+  border-color: #999;
+  color: #333;
+}
+
+.load-more-button:active {
+  background-color: #e9ecef;
+}
+
+.comment-count-info {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
