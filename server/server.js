@@ -32,12 +32,12 @@ async ( accessToken, refreshToken, profile, done ) => {
     console.log('네이버 프로필', profile);
     try {
         //1. 네이버 프로필의 이메일(또는 고유 ID)로 우리 DB에서 사용자를 찾는다. 
-        let user = await User.findOne({username: `naver_${profile.id}`});
+        let user = await User.findOne({naverId: profile.id});
 
         //2. 사용자가 없다면 새로 가입시킴
         if (!user) {
             user = new User({
-            username: profile.displayname, // 네이버 프로필의 닉네임을 사용
+            username: profile.displayName, // 네이버 프로필의 닉네임을 사용
             naverId: profile.id, // 네이버 고유 id는 별도 저장.
             password: 'naver_login_password_placeholder', // 소셜 로그인므로 실제 비밀번호는 필요없음.
             });
