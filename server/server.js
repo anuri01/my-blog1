@@ -1,12 +1,13 @@
+//const bcrypt = require('bcryptjs'); // 기본 require 방식
 // ES Module 사용(리액트와 맞춤)
 import 'dotenv/config'; // dotenv 설정 방식이 변경됨
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
-//const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
-import { populate } from 'dotenv';
+import passport from 'passport'; // passport import
+import { Strategy as NaverStrategy } from 'passport-naver'; // naver passport import
 
 // db 스키마 및 모델 분리
 import User from './models/User.js'; // 👈 이 줄 추가
@@ -19,6 +20,36 @@ const PORT = process.env.PORT || 4500;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- passport 설정 추가 -----
+passport.use(new NaverStrategy({
+    clientID: process.env.NAVER_CLIENT_ID,
+    clientSecret: process.env.NAVER_CLIENT_SECRET,
+    callbackURL: '/api/users/naver/callback',
+},
+// 네이버 프로필 정보를 가져왔을떄 실행할 함수
+async ( accessToken, refreshToken, profile, done ) => {
+    console.log('네이버 프로필', profile);
+    try {
+        //1. 네이버 프로필의 이메일(또는 고유 ID)로 우리 DB에서 사용자를 찾는다. 
+        let user = await User.findOne({username: `naver_${profile.id}`});
+
+        //2. 사용자가 없다면 새로 가입시킴
+        if (!user) {
+            user = new User({
+            username: profile.displayname, // 네이버 프로필의 닉네임을 사용
+            naverId: profile.id, // 네이버 고유 id는 별도 저장.
+            password: 'naver_login_password_placeholder', // 소셜 로그인므로 실제 비밀번호는 필요없음.
+            });
+            await user.save();
+        }
+        //3. 찾거나 새로 만든 사용자 정보를 다음 단계로 전달
+        return done(null, user);
+    } catch (error) {
+        return done(error);
+    }
+}
+));
 
 // 데이터베이스 연결
 mongoose.connect(process.env.MONGODB_URI)
@@ -101,6 +132,27 @@ app.post('/api/users/login', async(req,res) => {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
     }
 });
+
+//네이버 로그인관련 라우트 추가
+// 1. 로그인 시작 라우트(해당 경로로 요청이 오면 네이버 로그인 창으로 보냄
+app.get('/api/users/naver', passport.authenticate('naver', { authType: 'reprompt'}));
+
+// 2. 로그인 성공 후 Callback 라우트
+app.get('/api/users/naver/callback',
+    // passport.authenricate가 중간에 네이버 정보를 받아 위에서 설정한 callback 함수를 실행
+    passport.authenticate('naver', {session: false, failureRedirect: '/login'}),
+    (req, res) => {
+        //3. 콜백함수에서 전달받은 user 정보(req.user)로 우리 앱의 JWT토튼을 생성합니다. 
+        const token = jwt.sign(
+            { id: req.user._id, username: req.user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h'}
+        );
+        //4. 생성된 토큰을 쿼리 파라미터에 담아 프론트엔드의 특정페이지로 리다이렉션
+        // 이 부분은 나중에 프론트 엔드에서 토튼을 받을 페이지를 만들고 연결함. 
+        res.redirect(`${process.env.FRONTEND_URL}/auth/naver/callback?token=${token}`);
+    }
+);
 
 // 게시글 목록
 app.get('/api/posts', async(req, res) => {

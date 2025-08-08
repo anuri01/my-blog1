@@ -30,6 +30,7 @@
 /* Tiptap은 p, strong, em 등의 기본 HTML 태그를 사용하므로, 
    이 태그들에 직접 스타일을 적용해 줍니다. */
 .post-body p {
+  min-height: 100px;
   margin-top: 0;
   margin-bottom: 1rem;
 }

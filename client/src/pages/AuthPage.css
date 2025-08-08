@@ -53,3 +53,22 @@ h3 {
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
+.social-login {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.naver-login-button {
+  display: block; /* a 태그를 블록 요소로 변경 */
+  width: 100%;    /* 너비를 100%로 설정 */
+  box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+  background-color: #03C75A;
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-size: 1.1rem;
+}

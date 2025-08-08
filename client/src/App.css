@@ -83,6 +83,7 @@ a {
 
 /* --- 공통 버튼 스타일 --- */
 .button {
+  font-family: inherit;
   margin-top: 1rem;
   display: inline-flex;
   align-items: center;

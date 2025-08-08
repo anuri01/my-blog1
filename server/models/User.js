@@ -6,7 +6,8 @@ import bcrypt from 'bcryptjs';
 // 사용자(User) 모델 스키마정의
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true},
-    password: { type: String, required: true }
+    password: { type: String},
+    naverId: { type: String, unique: true, sparse: true } // 네이버 고유 ID를 위한 필드
 });
 
 // 사용자 정보 저장 시 비밀번호 암호화 훅 추가
