@@ -65,10 +65,18 @@ useEffect(() => {
       <div className="profile-info">
         <strong>사용자 이름 :</strong> {user.username}
       </div>
-      {/* 네이버 로그인 사용자가 아닌 경우에만 비밀번호 변경 UI 표시 */}
-      {!user.naverId && (
-        <>
-          <hr />
+      <hr />
+      {/* 네이버 로그인 사용자인 경우 안내 메시지 표시 */}
+      {user.naverId ? (
+        <div className="naver-login-info">
+          <h3>계정 정보</h3>
+          <p className="info-message">
+            🔒 네이버 로그인으로 가입하신 회원님은 보안상 네이버에서 직접 비밀번호를 관리하고 있어요.<br />
+            비밀번호 변경이 필요하시면 네이버 계정 설정에서 변경해 주세요! 😊
+          </p>
+        </div>
+      ) : (
+        <div>
           <h3>비밀번호 변경</h3>
           <form onSubmit={handlePasswordChange}>
             <input
@@ -87,7 +95,7 @@ useEffect(() => {
             />
             <button type="submit" className="auth-button button-primary-single">변경하기</button>
           </form>
-        </>
+        </div>
       )}
       {/* useEffect를 통해 처리 */}
       {/* {message && <p className="success-message">{message}</p>}

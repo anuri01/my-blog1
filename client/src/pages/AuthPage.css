@@ -72,3 +72,20 @@ h3 {
   text-align: center; /* 텍스트 가운데 정렬 */
   font-size: 1.1rem;
 }
+
+.naver-login-info {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.info-message {
+  background-color: #f8f9fa;
+  border: 2px solid #e3f2fd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
