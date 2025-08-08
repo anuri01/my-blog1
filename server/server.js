@@ -35,8 +35,18 @@ async ( accessToken, refreshToken, profile, done ) => {
 
         //2. 사용자가 없다면 새로 가입시킴
         if (!user) {
+            // 2. username 중복 방지 처리
+            const username = profile.displayName;
+            const existingUser = await User.findOne({ username });
+            let finalUsername = username;
+
+            if (existingUser) {
+                // 중복 방지: 네이버 ID를 붙이거나 랜덤값 추가
+                finalUsername = `${username}_naver`;
+            }
+
             user = new User({
-            username: profile.displayName, // 네이버 프로필의 닉네임을 사용
+            username: finalUsername, // 네이버 프로필의 닉네임을 사용
             naverId: profile.id, // 네이버 고유 id는 별도 저장.
             password: 'naver_login_password_placeholder', // 소셜 로그인므로 실제 비밀번호는 필요없음.
             });
@@ -45,6 +55,10 @@ async ( accessToken, refreshToken, profile, done ) => {
         //3. 찾거나 새로 만든 사용자 정보를 다음 단계로 전달
         return done(null, user);
     } catch (error) {
+        if (error.code === 11000) {
+            console.error('중복된 username으로 인해 사용자 생성 실패:', error);
+            return done(null, false, { message: '중복된 사용자 이름입니다.' });
+        }
         return done(error);
     }
 }
