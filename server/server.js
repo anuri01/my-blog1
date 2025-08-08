@@ -29,8 +29,7 @@ passport.use(new NaverStrategy({
 },
 // 네이버 프로필 정보를 가져왔을떄 실행할 함수
 async ( accessToken, refreshToken, profile, done ) => {
-    console.log('네이버 프로필', profile);
-    try {
+        try {
         //1. 네이버 프로필의 이메일(또는 고유 ID)로 우리 DB에서 사용자를 찾는다. 
         let user = await User.findOne({naverId: profile.id});
 
