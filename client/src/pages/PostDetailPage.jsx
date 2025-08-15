@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import toast from "react-hot-toast"
 import io from "socket.io-client";
+=======
+import toast from "react-hot-toast";
+import io from 'socket.io-client'; //socket.io-client 임포트
+>>>>>>> main
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore"; // 로그인 상태 확인
 import './PostDetailPage.css';
 
+<<<<<<< HEAD
 // const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500', { path:'/api/socket.id' });
 const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500/');
+=======
+const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500/', { path: "api/socket.io" }); // 백엔드 소켓 서버에 연결
+>>>>>>> main
 
 function PostDetailPage() {
     // 게시글 상세페이지에 사용할 상태 설정(게시글, 게시글 불러오는중, 에러)
@@ -43,6 +52,7 @@ function PostDetailPage() {
             }
         };
         fetchPostAndComments();
+<<<<<<< HEAD
 
         // 방송 수신 쏘스 추가
         const onNewComment = (newCommentData) => {
@@ -61,6 +71,29 @@ function PostDetailPage() {
         }
 
     }, [postId, user]);
+=======
+   const onNewComment = (newCommentData) => {
+      if (newCommentData.post === postId) {
+        // 👇 --- 여기가 수정된 핵심 로직입니다 ---
+        // 방송으로 들어온 댓글의 작성자 ID와 현재 로그인한 내 ID를 비교합니다.
+        // ID가 다를 경우에만 (즉, 다른 사람이 쓴 댓글일 경우에만) 알림을 띄우고 목록에 추가합니다.
+        if (user && user.id !== newCommentData.author._id) {
+          toast('새로운 댓글이 달렸습니다!', { icon: '💬' });
+          setComments(prevComments => [...prevComments, newCommentData]);
+        }
+      }
+    };
+
+    socket.on('newComment', onNewComment);
+
+    return () => {
+      socket.off('newComment', onNewComment);
+    };
+  }, [postId, user]); // 👈 의존성 배열에 user를 추가합니다.
+
+
+    
+>>>>>>> main
 
     // 👇 게시글 삭제 함수 추가
   const handleDeletePost = async () => {
@@ -81,7 +114,11 @@ function PostDetailPage() {
         try {
             const response = await api.post(`/posts/${postId}/comments`, { content: newComment });
             // 목록 전체를 다시 불러오지 않고, 배열의 스프레드 문법으로 새로 추가된 댓글말 기존 목록에 추가
+<<<<<<< HEAD
             setComments(prevComments => [response.data, ...prevComments]);
+=======
+            setComments(prevComments => [...prevComments, response.data]);
+>>>>>>> main
             setNewComment(''); // 입력창 비우기
         } catch (error) {
             console.error('댓글 등록에 실패했습니다.', error);
