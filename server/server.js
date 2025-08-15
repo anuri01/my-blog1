@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import http from 'http'; // 👈 http 모듈 import
+import { Server } from 'socket.io'; // 👈 socket.io Server import
 import passport from 'passport'; // passport import
 import { Strategy as NaverStrategy } from 'passport-naver'; // naver passport import
 
@@ -20,6 +22,24 @@ const PORT = process.env.PORT || 4500;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+    path: "/api/socket.io", // 경로 추가
+    cors: {
+        origin: process.env.FRONTEND_URL || 'http://localhost:5173',  // 프론트엔드 주소 허용
+        methods: [ "GET", "POST" ],
+    }
+});
+
+// "누군가 접속하면..." 이라는 이벤트를 감지합니다.
+io.on('connection', (socket) => {
+    console.log('✅ A user connected:', socket.id);
+
+// 접속이 끊어지면 실행됩니다.
+  socket.on('disconnect', () => {
+    console.log('❌ User disconnected:', socket.id);
+  });
+});
 
 // --- passport 설정 추가 -----
 passport.use(new NaverStrategy({
@@ -310,7 +330,13 @@ app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
         console.log('--- 6. DB 저장 성공! ---');
 
         const populateComment = await Comment.findById(newComment._id).populate('author', 'username');
+        
+        // 👇 --- 여기가 핵심: 방송 송출 --- 👇
+        // 'newComment'라는 이름으로, 새로 생성된 댓글 데이터를 모든 접속자에게 방송합니다.
+        io.emit('newComment', populateComment);
         res.status(201).json(populateComment);
+
+        
 
     } catch(error) {
         console.error("!!! 댓글 저장 중 에러 발생 !!!", error);
@@ -362,6 +388,6 @@ app.put('/api/users/password', authMiddleware, async ( req, res ) => {
 });
 
 // 서버실행
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`서버가 http://localhost:${PORT} 에서 실행중입니다.`)
 });
