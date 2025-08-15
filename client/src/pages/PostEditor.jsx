@@ -3,12 +3,14 @@ import api from "../api/axiosConfig";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import TiptapEditor from "../components/TiptapEditor";
+import toast from "react-hot-toast";
 import './PostEditor.css';
 
 function PostEditor() {
 
 const [ title, setTitle ] = useState('');
 const [ content, setContent ] = useState('');
+const [ imageFile, setImageFile ] = useState(null); // 선택한 이미지 파일을 기억할 상태
 const navigate = useNavigate();
 const { postId } = useParams(); // URL에서 PostId를 꺼내 옴
 const isEditMode = Boolean(postId); // PostId가 있으면 true(수정모드) 없으면 false(등록모드)
@@ -40,16 +42,28 @@ const handlePostSubmit = async (e) => {
         alert('제목과 내용을 모두 입력해 주세요.');
         return;
     }
+    // formData 객체 생성
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    if (imageFile) {
+        formData.append('image', imageFile); // 'image'라는 이름표에 파일 담기
+    }
     
     // isEditMode 값에 따라 다른 Api 호출
     try {
         let response;
         if (isEditMode) {
             // 수정모드일 경우 PUT 요청
-            response = await api.put(`/posts/${postId}`, { title, content });
+            response = await api.put(`/posts/${postId}`, formData, { 
+                headers: { 'Content-Type': 'multipart/form-data' } // 파일 전송을 위한 헤더 설정
+            });
         } else {
             // 글쓰기 모드일경우 POST 요청
-            response = await api.post('/posts', { title, content });
+            response = await api.post('/posts', formData, { 
+                headers: { 'Content-Type': 'multipart/form-data' } // 파일 전송을 위한 헤더 설정
+            });
         }
         // 게시물 등록 성공 시 게시물 상세페이지로 이동 
         // setTitle('');
@@ -58,7 +72,7 @@ const handlePostSubmit = async (e) => {
 
     } catch(error) {
         console.log('게시글 작성에 실패했어요.', error);
-        alert('게시글 작성에 실패했어요.');
+        toast.error('게시글 작성에 실패했어요.');
     }
 };
 
@@ -74,6 +88,8 @@ return (
                 <section className="post-creator">
                     {/* <h3>내용을 입력하세요.</h3> */}
                     <form onSubmit={handlePostSubmit}>
+                    <div>
+                        {/* <label>제목</label> */}
                         <input 
                         className="form-input"
                         type="text"
@@ -82,13 +98,28 @@ return (
                         maxLength={50}
                         onChange={(e) => setTitle(e.target.value)}
                         />
+                    </div>
                         {/* 👇 기존 textarea/ReactQuill을 TiptapEditor 컴포넌트로 교체합니다. */}
+                    <div className="form-group">
+                        {/* <label>내용</label> */}
                          <TiptapEditor 
                         content={content}
                         onChange={(newContent) => {
                         setContent(newContent);
                         }}
                         />
+                    </div>
+                        <div className="form-group">
+                            <label htmlFor="image-upload" className="button-medium button-primary-single">파일 선택</label>
+                            <input
+                             id="image-upload"
+                             type="file"
+                             accept="image/*"
+                             onChange={(e) => setImageFile(e.target.files[0])}
+                             className="file-input" // input에 클래스 추가(숨기기위함)
+                            />
+                            {imageFile && <span className="file-name">{imageFile.name}</span>}
+                        </div>
                         {/* textarea를 사용할 경우 예시 */}
                         {/* <textarea 
                         className="form-textarea"

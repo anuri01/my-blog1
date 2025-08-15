@@ -113,6 +113,9 @@ function PostDetailPage() {
 
     return (
         <article className="post-detail">
+            {/* 👇 --- 게시글 대표 이미지 표시 추가 --- 👇 */}
+            {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />}
+
             <header className="post-header">
                 <h1>게시물 상세보기</h1>
                 <h2>{post.title}</h2>

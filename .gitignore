@@ -18,3 +18,5 @@ yarn-error.log*
 /server/node_modules
 /server/dist
 my-blog-s3-uploder_accessKeys.csv
+
+node_modules

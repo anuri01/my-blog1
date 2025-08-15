@@ -58,3 +58,42 @@
     gap: 8px;
     /* margin-top: 1rem; */
 }
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    /* display: block;  */
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    /* color: #555; */
+}
+
+/* input[type="file"]을 숨깁니다. */
+.file-input {
+  display: none;
+}
+
+/* label을 버튼처럼 꾸밉니다. */
+.file-label {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.file-label:hover {
+  background-color: #ddd;
+}
+
+/* 선택된 파일 이름을 보여줄 span의 스타일 */
+.file-name {
+  color: #555;
+  font-style: italic;
+  padding-left: 1rem;
+}

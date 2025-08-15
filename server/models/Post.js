@@ -4,6 +4,7 @@ const postSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    imageUrl: { type: String }, // 이미지 url을 저장할 필드 추가
     createdAt: { type: Date, default: Date.now }
 });
 
