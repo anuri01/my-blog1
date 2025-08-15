@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../api/axiosConfig';
 import useUserStore from '../store/userStore';
 import './AuthPage.css'; // 공통 스타일 재사용
@@ -28,13 +29,13 @@ function ProfilePage() {
 
   useEffect(() => {
   if (error && error !== '') { // 빈 문자열이 아닐 때만 alert 호출
-    alert(error);
+    toast.error(error);
   }
 }, [error]);
 
 useEffect(() => {
   if (message && message !== '') { // 빈 문자열이 아닐 때만 alert 호출
-    alert(message);
+    toast.success(message);
   }
 }, [message]);
 

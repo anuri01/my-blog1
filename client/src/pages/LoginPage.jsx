@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
@@ -32,16 +33,20 @@ function LoginPage() {
         try {
             const response = await api.post('/users/login', {username, password});
             setToken(response.data.token);
-            alert('로그인 되었습니다.')
+            toast.success('로그인 되었습니다.')
             navigate('/')
 
         } catch (err) {
-            if ( err.response ) {
-            setError(err.response.data.message);
-            } else {
-            setError('서버에 연결할 수 없음.')
+            // if ( err.response ) {
+            // setError(err.response.data.message);
+            // } else {
+            // setError('서버에 연결할 수 없음.')
+
+            // toast 팝업으로 변경
+            const errorMessage = err.response ? err.response.data.message : '서버에 연결할 수 없음';
+            toast.error(errorMessage);
         }
-        } 
+         
       };    
     
       return (

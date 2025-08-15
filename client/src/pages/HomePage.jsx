@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
 import './HomePage.css';
@@ -65,7 +66,7 @@ const handleDeletePost = async (postId) => {
         fetchPosts(); // 목록 새로 고침
     } catch (error) {
         console.error("게시물 삭제에 실패했습니다.", error);
-        alert('게시글 삭제에 실패했어요.');
+        toast.error('게시글 삭제에 실패했어요.');
     } finally {
         setIsLoading(false);
     }

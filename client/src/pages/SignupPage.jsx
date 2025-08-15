@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import axios from "axios";
+import toast from "react-hot-toast"; // 토스트팝업 실제 띄우는 메소드
 import api from "../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
@@ -29,13 +30,13 @@ function SignupPage() {
         // 사용자 이름 유효성
         const usernameError = validateUsername(username);
         if (usernameError) {
-            alert(usernameError);
+            toast.error(usernameError);
             return;
         }
 
         const passwordError = validatePassword(password);
         if(passwordError) {
-            alert(passwordError);
+            toast.error(passwordError);
             return;
         }
 
@@ -44,16 +45,20 @@ function SignupPage() {
             await api.post('/users/signup', { username, password });
 
             // 요청 성공시 실행
-            alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+            toast.success('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
             navigate('/login');
 
         } catch (err) {
             // 요청 실패 시 실행
-            if(err.response) {
-                setError(err.response.data.message);
-            } else {
-                setError('서버에 연결할 수 없습니다.');
-            }
+            // if(err.response) {
+            //     setError(err.response.data.message);
+            // } else {
+            //     setError('서버에 연결할 수 없습니다.');
+            // }
+            
+            // 에러메시지도 토스트 팝업으로 변경
+            const errorMessage = err.response ? err.response.data.message : "서버에 연결할 수 없습니다.";
+            toast.error(errorMessage);
         }
     };
     

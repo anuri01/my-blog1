@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import api from "../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
@@ -16,7 +17,7 @@ const handlePostSubmit = async (e) => {
     // form 제출시 기본 동작 막음
     e.preventDefault();
     if (!title || !content) {
-        alert('제목과 내용을 모두 입력해 주세요.');
+        toast.error('제목과 내용을 모두 입력해 주세요.');
         return;
     }
     
@@ -29,7 +30,7 @@ const handlePostSubmit = async (e) => {
 
     } catch(error) {
         console.log('게시글 작성에 실패했어요.', error);
-        alert('게시글 작성에 실패했어요.');
+        toast.error('게시글 작성에 실패했어요.');
     }
 };
 

@@ -1,5 +1,6 @@
 import React from 'react' // React 엔진과 useEffect 훅
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'; // // 페이지 이동(라우팅) 도구 세트
+import { Toaster } from 'react-hot-toast';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NaverCallback from './pages/NaverCallback'; // 👈 콜백 페이지 import
@@ -26,6 +27,7 @@ const handleLogout = () => {
   return (
     <>
       <div className='app-container'> {/* 모바일 화면처럼 보이게할 전체 컨테이터 */}
+        <Toaster position="top-center" /> {/* 👈 앱 최상단에 Toaster '알림판' 설치 */}
         <header className='app-header'>
           <div className='logo'>
             <Link to="/">My blog</Link> {/* 로고를 누르면 홈으로 이동함*/}
