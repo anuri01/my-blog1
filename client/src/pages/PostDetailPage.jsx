@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
+import io from "socket.io-client";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore"; // 로그인 상태 확인
 import './PostDetailPage.css';
+
+// const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500', { path:'/api/socket.id' });
+const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500/');
 
 function PostDetailPage() {
     // 게시글 상세페이지에 사용할 상태 설정(게시글, 게시글 불러오는중, 에러)
@@ -38,7 +43,24 @@ function PostDetailPage() {
             }
         };
         fetchPostAndComments();
-    }, [postId]);
+
+        // 방송 수신 쏘스 추가
+        const onNewComment = (newCommentData) => {
+            if ( newCommentData.post === postId ) {
+                if(user && user.id !== newCommentData.author._id) {
+                     toast('새로운 댓글이 달렸습니다.!', { icon: '💬' });
+                setComments(prevComments => [newCommentData, ...prevComments]);
+                }
+            }
+        };
+
+        socket.on('newComment', onNewComment);
+
+        return () => {
+            socket.off('newComment', onNewComment);
+        }
+
+    }, [postId, user]);
 
     // 👇 게시글 삭제 함수 추가
   const handleDeletePost = async () => {
@@ -59,7 +81,7 @@ function PostDetailPage() {
         try {
             const response = await api.post(`/posts/${postId}/comments`, { content: newComment });
             // 목록 전체를 다시 불러오지 않고, 배열의 스프레드 문법으로 새로 추가된 댓글말 기존 목록에 추가
-            setComments([...comments, response.data]);
+            setComments(prevComments => [response.data, ...prevComments]);
             setNewComment(''); // 입력창 비우기
         } catch (error) {
             console.error('댓글 등록에 실패했습니다.', error);

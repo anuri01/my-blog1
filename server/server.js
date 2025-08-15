@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import http from 'http'; // node.js 기본 http 모듈 import
+import { Server } from 'socket.io'; // socket.io 서버 임포트 추가 
 import passport from 'passport'; // passport import
 import { Strategy as NaverStrategy } from 'passport-naver'; // naver passport import
 
@@ -20,6 +22,24 @@ const PORT = process.env.PORT || 4500;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//socket.IO 서버 설정
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, { cors: {
+    // path:"api/socket.io",
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // 프론트엔드 주소 허용
+    methods: [ "GET", "POST" ],
+}
+});
+
+io.on('connection',(socket) => {
+    console.log('✅ A user connected:', socket.id);
+    
+    // 접속이 끊어지면 실행
+    socket.on('disconnect', () => {
+        console.log('❌ User disconnected:', socket.id);
+    });
+});
 
 // --- passport 설정 추가 -----
 passport.use(new NaverStrategy({
@@ -310,6 +330,7 @@ app.post('/api/posts/:postId/comments', authMiddleware, async ( req, res ) => {
         console.log('--- 6. DB 저장 성공! ---');
 
         const populateComment = await Comment.findById(newComment._id).populate('author', 'username');
+        io.emit('newComment', populateComment); // 방송 송출
         res.status(201).json(populateComment);
 
     } catch(error) {
@@ -362,6 +383,6 @@ app.put('/api/users/password', authMiddleware, async ( req, res ) => {
 });
 
 // 서버실행
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`서버가 http://localhost:${PORT} 에서 실행중입니다.`)
 });
