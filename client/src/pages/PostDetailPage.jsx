@@ -47,7 +47,8 @@ function PostDetailPage() {
         // 방송 수신 쏘스 추가
         const onNewComment = (newCommentData) => {
             if ( newCommentData.post === postId ) {
-                if(user && user.id !== newCommentData.author._id) {
+                const currentUser = useUserStore.getState().user;
+                if(!currentUser || currentUser.id !== newCommentData.author._id) {
                      toast('새로운 댓글이 달렸습니다.!', { icon: '💬' });
                 setComments(prevComments => [newCommentData, ...prevComments]);
                 }
