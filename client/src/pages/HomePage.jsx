@@ -14,6 +14,7 @@ const [ posts, setPosts ] = useState([]);
 const [ currentPage, setCurrentPage ] = useState(1);
 const [ totalPages, setTotalPages ] = useState(1);
 const [ searchParams, setSearchParams ] = useSearchParams();
+const [ isLoading, setIsLoading ] = useState(true);
 
 
 // '새 글 작성' 관련 상태(title, content)와 함수(handlePostSubmit)는 여기서 삭제됩니다.
@@ -27,7 +28,8 @@ const [ searchParams, setSearchParams ] = useSearchParams();
 
 // 기능(함수) 정의
 // 서버로부터 모든 게시물을 불러옴
-const fetchPosts = async (page) => {    
+const fetchPosts = async (page) => {
+    setIsLoading(true); // api 요청시작 -> "로딩 중" 스위치 킴
     try{
         const response = await api.get(`/posts/?page=${page}&limit=5)`);
         const { posts, currentPage, totalPages } = response.data;
@@ -37,6 +39,9 @@ const fetchPosts = async (page) => {
 
     } catch (error) {
         console.error("게시물을 불러오는데 실패했습니다.", error);
+    } finally {
+       // try가 성공하든, catch로 에러가 나든, 항상 마지막에 실행됩니다.
+      setIsLoading(false); // API 요청 끝 -> "로딩 중" 스위치를 끕니다. 
     }
 };
 
@@ -55,14 +60,16 @@ const handlePageChange = (page) => {
 const handleDeletePost = async (postId) => {
     if (!window.confirm('게시물을 삭제하시겠어요?')) return;
     try {
+        setIsLoading(true);
         await api.delete(`/posts/${postId}`);
         fetchPosts(); // 목록 새로 고침
     } catch (error) {
         console.error("게시물 삭제에 실패했습니다.", error);
         alert('게시글 삭제에 실패했어요.');
+    } finally {
+        setIsLoading(false);
     }
 };
-
 // 게시글 수정 모드 진입 시 실행될 함수
 // 수정하는 게시글 객체를 불러오는 방법 확인
 // const handleEditClick = (post) => {
@@ -83,6 +90,10 @@ const handleDeletePost = async (postId) => {
 //         alert('게시글 수정에 실패했습니다.');
 //     }
 // };
+// 로딩중일 때 보여줄 ui (조기반환)
+if( isLoading ) {
+    return <div className="loading-message">데이터를 불러오는 중입니다.</div>
+}
 
     
     return (

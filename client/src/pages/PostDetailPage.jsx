@@ -77,7 +77,7 @@ function PostDetailPage() {
     const hasMoreComments = comments.length > visibleCommentsCount;
 
     if(isLoading) {
-        return <div>로딩 중...</div>; // 로딩중 일떄 표시
+        return <div className="loading-message">로딩 중...</div>; // 로딩중 일떄 표시
     }
     if(error) {
         return <div>{error} <Link to="/">홈으로</Link></div>; // 에러가 났을때 이 ui만 표시

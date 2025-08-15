@@ -197,9 +197,12 @@ button.button-primary:hover {
 
 .loading-message {
   text-align: center;
-  padding: 2.5rem;
+  padding: 2.5rem 0;
   margin-top: 40px;
   border-top: 1px solid #a3a0a0;
+  font-size: 1.2rem;
+  color: #888;
+  font-weight: 500;
 }
 
 /* index.css 파일 하단에 추가 */
