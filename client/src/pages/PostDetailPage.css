@@ -30,7 +30,7 @@
 /* Tiptap은 p, strong, em 등의 기본 HTML 태그를 사용하므로, 
    이 태그들에 직접 스타일을 적용해 줍니다. */
 .post-body p {
-  min-height: 100px;
+  min-height: 50px;
   margin-top: 0;
   margin-bottom: 1rem;
 }
@@ -160,7 +160,7 @@
 
 .post-image {
   width: 100%; /* 이미지 너비를 부모 요소에 맞춤 */
-  max-height: 250px; /* 최대 높이 제한 */
+  max-height: 400px; /* 최대 높이 제한 */
   object-fit: contain; /* 이미지 비율 유지하며 영역에 맞게 줄이기 */
   margin-bottom: 1rem; /* 이미지 아래 여백 */
   border-radius: 8px; /* 약간의 둥근 모서리 */
