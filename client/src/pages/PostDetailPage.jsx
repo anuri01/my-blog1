@@ -81,7 +81,7 @@ function PostDetailPage() {
         try {
             const response = await api.post(`/posts/${postId}/comments`, { content: newComment });
             // 목록 전체를 다시 불러오지 않고, 배열의 스프레드 문법으로 새로 추가된 댓글말 기존 목록에 추가
-            setComments(prevComments => [...prevComments, response.data]);
+            setComments(prevComments => [response.data, ...prevComments]);
             setNewComment(''); // 입력창 비우기
         } catch (error) {
             console.error('댓글 등록에 실패했습니다.', error);
