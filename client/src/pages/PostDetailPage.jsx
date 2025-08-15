@@ -7,7 +7,7 @@ import useUserStore from "../store/userStore"; // 로그인 상태 확인
 import './PostDetailPage.css';
 
 // const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500', { path:'/api/socket.id' });
-const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500/');
+const socket = io(import.meta.env.VITE.SOCKET_API_URL || 'http://localhost:4500/');
 
 function PostDetailPage() {
     // 게시글 상세페이지에 사용할 상태 설정(게시글, 게시글 불러오는중, 에러)
