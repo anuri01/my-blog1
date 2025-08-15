@@ -10,6 +10,7 @@ import http from 'http'; // node.js 기본 http 모듈 import
 import { Server } from 'socket.io'; // socket.io 서버 임포트 추가 
 import passport from 'passport'; // passport import
 import { Strategy as NaverStrategy } from 'passport-naver'; // naver passport import
+import upload from './upload.js'; // 업로드 기능 추가
 
 // db 스키마 및 모델 분리
 import User from './models/User.js'; // 👈 이 줄 추가
@@ -118,6 +119,18 @@ const authMiddleware = (req, res, next) => {
 };
 
 // --- 사용자 API 라우트 ---
+
+// 파일 업로드 
+// upload.single('image')는 'image'라는 이름으로 전송된 단일 파일을 처리하는 미들웨어입. 
+app.post('/api/upload', authMiddleware, upload.single('image'), (req, res) => {
+    //파일 업로드 성공시 req.file 객체에 파일이 담김
+    if(!req.file) {
+        return res.status(400).json({ message: '파일이 없습니다.'});
+    }
+
+    // s3에 저장된 파일의 url을 클라이언트에 보내줌
+    res.json({ imageUrl: req.file.location });
+});
 
 // 회원 가입
 app.post('/api/users/signup', async(req,res) => {
