@@ -113,8 +113,6 @@ function PostDetailPage() {
 
     return (
         <article className="post-detail">
-            {/* 👇 --- 게시글 대표 이미지 표시 추가 --- 👇 */}
-            {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />}
 
             <header className="post-header">
                 <h1>게시물 상세보기</h1>
@@ -128,6 +126,9 @@ function PostDetailPage() {
             className="post-body"
             dangerouslySetInnerHTML={{ __html: post.content }} 
             />
+                        {/* 👇 --- 게시글 이미지 표시 추가 --- 👇 */}
+            {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />}
+
             <div className="util-button-group">
             <Link to="/" className="action-button">목록</Link>
             { isLoggedIn && user?.id === post.author?._id && <div className="author-actions">

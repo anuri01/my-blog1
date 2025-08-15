@@ -39,7 +39,7 @@ const handlePostSubmit = async (e) => {
     // form 제출시 기본 동작 막음
     e.preventDefault();
     if (!title || !content) {
-        alert('제목과 내용을 모두 입력해 주세요.');
+        toast.error('제목과 내용을 모두 입력해 주세요.');
         return;
     }
     // formData 객체 생성

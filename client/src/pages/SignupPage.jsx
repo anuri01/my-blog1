@@ -14,6 +14,7 @@ function SignupPage() {
     const [ error, setError ] = useState('');
     const navigate = useNavigate();
     const { isLoggedIn } = useUserStore();
+    const backendUrl = import.meta.env.VITE_API_URL;
 
       // 로그인한 사용자가 접근 시 메인페이지로 리다이렉트(app.jsx 라우트에서 이미 처리했지만 페이지 내에서 상태가 바뀔경우를 대비해 추가)
         useEffect( () => {
@@ -70,6 +71,13 @@ function SignupPage() {
                 <input className="signup-form-input" type='password' placeholder="비밀번호" value={password} maxLength={21} onChange={ (e) => setPassword(e.target.value)}></input>
                 <button type='submit' className="button button-primary-single">회원가입</button>
             </form>
+            {/* --- 👇 네이버 회원가입 버튼 (새로 추가) --- */}
+            <div className="social-signup">
+                {/* a 태그를 사용해 백엔드의 네이버 로그인 시작 API로 이동시킵니다. */}
+                <a href={`${backendUrl}/users/naver`} className="naver-login-button">
+                네이버로 회원가입
+                </a>
+            </div>
             {error && <p className="error-message">{error}</p>}
             <p className="auth-p">이미 계정이 있으신가요? <Link to="/login">로그인</Link></p>
         </>

@@ -24,7 +24,7 @@
   /* font-size: 0.8rem; */
   line-height: 1rem;
   color: #333;
-  border-bottom: 1px solid #e0e0e0;
+  /* border-bottom: 1px solid #e0e0e0; */
 }
 /* 👇 --- Tiptap 에디터의 기본 스타일을 흉내 내는 CSS 추가 --- 👇 */
 /* Tiptap은 p, strong, em 등의 기본 HTML 태그를 사용하므로, 
@@ -156,4 +156,16 @@
   font-size: 0.85rem;
   color: #666;
   font-weight: 500;
+}
+
+.post-image {
+  width: 100%; /* 이미지 너비를 부모 요소에 맞춤 */
+  max-height: 250px; /* 최대 높이 제한 */
+  object-fit: contain; /* 이미지 비율 유지하며 영역에 맞게 줄이기 */
+  margin-bottom: 1rem; /* 이미지 아래 여백 */
+  border-radius: 8px; /* 약간의 둥근 모서리 */
+  margin-top: 1rem; /* 본문과의 간격 */
+  margin-bottom: 2rem; /* 아래 구분선과의 간격 */
+  border-bottom: 1px solid #e0e0e0; /* 이미지 아래에 구분선 추가 */
+  padding-bottom: 2rem; /* 구분선과 버튼 사이의 간격 */
 }

@@ -1,6 +1,6 @@
 import React from 'react' // React 엔진과 useEffect 훅
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'; // // 페이지 이동(라우팅) 도구 세트
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NaverCallback from './pages/NaverCallback'; // 👈 콜백 페이지 import
@@ -20,7 +20,7 @@ const navigate = useNavigate();
 //2. 로그아웃 버튼을 눌렀을때 실행될 함수'
 const handleLogout = () => {
   logout();
-  alert('로그아웃 되었습니다.');
+  toast.success('로그아웃 되었습니다.');
   navigate('/login');
 };
  
