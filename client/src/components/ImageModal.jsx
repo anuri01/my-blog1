@@ -37,7 +37,15 @@ function ImageModal({ isOpen, onRequestClose, imageUrl, imageName }) {
       <button onClick={onRequestClose} className="close-modal-button">
         &times;
       </button>
-      <img src={imageUrl} alt={imageName} style={{ maxWidth: '100%', maxHeight: '100%', display: 'block'}} />
+      <img src={imageUrl}
+           alt={imageName}
+           style={{ 
+            display: 'block',
+            maxWidth: '90vw',
+            maxHeight: '85vh',
+            objectFit: 'contain'
+         }} 
+      />
     </Modal>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore";
 import './HomePage.css';
@@ -8,7 +8,7 @@ import './HomePage.css';
 
 function HomePage() {
 //전역 스토에서 로그인 상태만 가져옴
-const { isLoggedIn, user } = useUserStore();
+const { isLoggedIn } = useUserStore();
 // 관리할 상태 설정
 // 목록은 배열이므로 빈배열로 초기화
 const [ posts, setPosts ] = useState([]);
@@ -58,19 +58,19 @@ const handlePageChange = (page) => {
 }
 
 // 게시글 삭제 시 실행될 함수
-const handleDeletePost = async (postId) => {
-    if (!window.confirm('게시물을 삭제하시겠어요?')) return;
-    try {
-        setIsLoading(true);
-        await api.delete(`/posts/${postId}`);
-        fetchPosts(); // 목록 새로 고침
-    } catch (error) {
-        console.error("게시물 삭제에 실패했습니다.", error);
-        toast.error('게시글 삭제에 실패했어요.');
-    } finally {
-        setIsLoading(false);
-    }
-};
+// const handleDeletePost = async (postId) => {
+//     if (!window.confirm('게시물을 삭제하시겠어요?')) return;
+//     try {
+//         setIsLoading(true);
+//         await api.delete(`/posts/${postId}`);
+//         fetchPosts(); // 목록 새로 고침
+//     } catch (error) {
+//         console.error("게시물 삭제에 실패했습니다.", error);
+//         toast.error('게시글 삭제에 실패했어요.');
+//     } finally {
+//         setIsLoading(false);
+//     }
+// };
 // 게시글 수정 모드 진입 시 실행될 함수
 // 수정하는 게시글 객체를 불러오는 방법 확인
 // const handleEditClick = (post) => {
