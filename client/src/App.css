@@ -168,7 +168,7 @@ button.button-primary:hover {
 .action-button {
   /* --- 폰트 스타일 통일 (핵심) --- */
   font-family: inherit; /* 부모 요소의 폰트를 강제로 상속받음 */
-  font-size: 0.8rem;   /* 부모 요소의 폰트 크기를 강제로 상속받음 (또는 1rem) */
+  font-size: 1rem;   /* 부모 요소의 폰트 크기를 강제로 상속받음 (또는 1rem) */
   color: inherit;       /* a 태그의 기본 파란색 대신 부모의 글자색 상속 */
   text-decoration: none;/* a 태그의 밑줄 제거 */
   
