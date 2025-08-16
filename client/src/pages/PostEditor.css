@@ -97,3 +97,16 @@
   font-style: italic;
   padding-left: 1rem;
 }
+
+.file-list {
+  margin-top: 0.5rem;
+}
+
+.file-item {
+  font-size: 0.9rem;
+  color: #555;
+  background-color: #f0f0f0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}

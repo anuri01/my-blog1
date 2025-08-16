@@ -169,3 +169,53 @@
   border-bottom: 1px solid #e0e0e0; /* 이미지 아래에 구분선 추가 */
   padding-bottom: 2rem; /* 구분선과 버튼 사이의 간격 */
 }
+
+/* client/src/pages/PostDetailPage.css 파일 하단에 추가 */
+
+.attachments {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.attachments h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.attachments ul {
+  list-style: none;
+  padding: 0;
+}
+
+.attachments li {
+  margin-bottom: 1rem;
+}
+
+.attachment-image {
+ width: 100%; /* 이미지 너비를 부모 요소에 맞춤 */
+  max-height: 400px; /* 최대 높이 제한 */
+  object-fit: contain; /* 이미지 비율 유지하며 영역에 맞게 줄이기 */
+  margin-bottom: 1rem; /* 이미지 아래 여백 */
+  border-radius: 8px; /* 약간의 둥근 모서리 */
+  margin-top: 1rem; /* 본문과의 간격 */
+  /* margin-bottom: 2rem; 아래 구분선과의 간격 */
+  border-bottom: 1px solid #e0e0e0; /* 이미지 아래에 구분선 추가 */
+  /* padding-bottom: 2rem; 구분선과 버튼 사이의 간격 */
+}
+
+.attachment-link {
+  display: inline-block;
+  padding: 0.8rem 1.2rem;
+  background-color: #f0f2f5;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.attachment-link:hover {
+  background-color: #e4e6eb;
+}

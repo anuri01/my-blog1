@@ -126,8 +126,26 @@ function PostDetailPage() {
             className="post-body"
             dangerouslySetInnerHTML={{ __html: post.content }} 
             />
-                        {/* 👇 --- 게시글 이미지 표시 추가 --- 👇 */}
-            {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />}
+            {/* 👇 --- 게시글 이미지 표시 추가 --- 👇 */}
+            {/* {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />} */}
+            {/* --- 👇 첨부 파일 목록 (새로 추가) --- */}
+            {post.files && post.files.length > 0 && (
+                <div className="attachments">
+                <h4>첨부 파일</h4>
+                <ul>
+                    {post.files.map((file, index) => (
+                    <li key={index}>
+                        {/* 파일 타입이 'image/'로 시작하면 이미지로, 아니면 다운로드 링크로 표시 */}
+                        {file.type.startsWith('image/') ? (
+                        <img src={file.url} alt={file.name} className="attachment-image" />
+                        ) : (
+                        <a href={file.url} download className="attachment-link">{file.name}</a>
+                        )}
+                    </li>
+                    ))}
+                </ul>
+                </div>
+            )}
 
             <div className="util-button-group">
             <Link to="/" className="action-button">목록</Link>

@@ -43,9 +43,16 @@ const upload = multer({
     bucket: process.env.S3_BUCKET_NAME,
     acl: 'public-read',
     key: function (req, file, cb) {
-      cb(null, `images/${Date.now()}_${path.basename(file.originalname)}`);
+       // 👇 --- 여기가 수정된 핵심 로직입니다 --- 👇
+      // 1. 원본 파일 이름을 UTF-8 NFC 형식으로 정규화(normalize)합니다.
+      const normalizedOriginalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+
+      // 2. 정규화된 이름으로 파일 경로를 생성합니다.
+      cb(null, `images/${Date.now()}_${path.basename(normalizedOriginalName)}`);
     },
+    contentType: multerS3.AUTO_CONTENT_TYPE, // 파일 타입 자동 감지
   }),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 👈 5MB 파일 크기 제한 (선택 사항)
 });
 
 export default upload;

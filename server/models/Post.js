@@ -5,6 +5,13 @@ const postSchema = new mongoose.Schema({
     content: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     imageUrl: { type: String }, // 이미지 url을 저장할 필드 추가
+    files: [
+      { // files 배열로 변경
+        url: { type: String },
+        name: { type: String },
+        type: { type: String },
+    }
+    ],
     createdAt: { type: Date, default: Date.now }
 });
 

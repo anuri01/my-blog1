@@ -28,6 +28,13 @@ api.interceptors.request.use(
             // 토큰이 유효하면 헤더에 토큰을 추가함. 
             config.headers.authorization = `Bearer ${token}`;
         }
+
+         // 👇 FormData일 때는 Content-Type을 설정하지 않음
+        if (config.data instanceof FormData) {
+        // FormData의 경우 Content-Type을 삭제하여 브라우저가 자동으로 boundary를 설정하도록 함
+        delete config.headers['Content-Type'];
+        }
+
         return config;
     },
     (error) => {

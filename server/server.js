@@ -122,15 +122,15 @@ const authMiddleware = (req, res, next) => {
 
 // 파일 업로드 
 // upload.single('image')는 'image'라는 이름으로 전송된 단일 파일을 처리하는 미들웨어입. 
-app.post('/api/upload', authMiddleware, upload.single('image'), (req, res) => {
-    //파일 업로드 성공시 req.file 객체에 파일이 담김
-    if(!req.file) {
-        return res.status(400).json({ message: '파일이 없습니다.'});
-    }
+// app.post('/api/upload', authMiddleware, upload.single('image'), (req, res) => {
+//     //파일 업로드 성공시 req.file 객체에 파일이 담김
+//     if(!req.file) {
+//         return res.status(400).json({ message: '파일이 없습니다.' });
+//     }
 
-    // s3에 저장된 파일의 url을 클라이언트에 보내줌
-    res.json({ imageUrl: req.file.location });
-});
+//     // s3에 저장된 파일의 url을 클라이언트에 보내줌
+//     res.json({ imageUrl: req.file.location });
+// });
 
 // 회원 가입
 app.post('/api/users/signup', async(req,res) => {
@@ -207,9 +207,9 @@ app.get('/api/posts', async(req, res) => {
         const skip = (page - 1) * limit;
         const posts = await Post.find({})
         .sort({createdAt: -1 })
-        .populate('author', 'username') // author 필드를 User정보로 채우고, username만 선택
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .populate('author', 'username'); // author 필드를 User정보로 채우고, username만 선택
     const totalPosts = await Post.countDocuments();
     const totalPages = Math.ceil(totalPosts / limit);
     res.json({ posts,
@@ -238,31 +238,92 @@ app.get('/api/posts/:id', async (req, res) => {
 });
 
 // 작성된 게시글 등록
-app.post('/api/posts', authMiddleware, upload.single('image'), async(req, res) => {
+app.post('/api/posts', authMiddleware, upload.array('files', 5), async(req, res) => {
     try {
-        // console.log('서버가 받은 데이터 (req.body):', req.body);
+        
+        console.log('=== 게시물 생성 디버깅 ===');
+        console.log('req.body:', req.body);
+        console.log('req.files:', req.files);
+        console.log('Content-Type:', req.headers['content-type']);
         const { title, content } = req.body;
         if (!title || !content) {
             return res.status(400).json({message:'게시물 제목과 내용은 필수사항이에요.'});
         }
+
+        // req.files 배열을 우리가 원하는 데이터 형태로 가공
+        const filesData = req.files ? req.files.map(file => ({
+            url: file.location,
+            name: Buffer.from(file.originalname, 'latin1').toString('utf8'), // 한글 파일명 복원,
+            type: file.mimetype,
+        })) : [];
+
+        console.log('가공된 files 데이터:', filesData);
+
         const newPost = new Post({
             //키 값과 변수명이 같을 경우 키값 생략가능 ES6 문법(객체 속성 축약)
             title: title,
             content: content,
-            imageUrl: req.file ? req.file.location : null,
+            files: filesData, // 가공된 데이터 배열을 저장
             author: req.user.id
         });
+
+        console.log('저장할 게시물 데이터:', newPost);
         await newPost.save();
+        console.log('✅ 게시물 저장 성공');
         res.status(201).json(newPost);
         } catch (error) {
-            res.status(500).json({message: '서버 오류가 발생했어요.'});
+             console.error('❌ 게시물 저장 중 에러 발생:', error);
+             if (error.errors) {
+             console.error('Validation 에러:', error.errors);
+            }
+            res.status(500).json({message: '서버 오류가 발생했어요.', error: error.message});
         }
     
 
 });
 
+// app.post('/api/posts', authMiddleware, (req, res, next) => {
+//     // 👇 --- multer를 수동으로 실행하고 에러를 직접 처리하는 로직 추가 --- 👇
+//     const uploadMiddleware = upload.array('files', 5);
+
+//     uploadMiddleware(req, res, function (err) {
+//         if (err) {
+//             // Multer나 S3 연결 등 모든 종류의 파일 업로드 에러를 여기서 잡습니다.
+//             console.error('!!! 파일 업로드 중 에러 발생 !!!', err);
+//             return res.status(500).json({ message: '파일 업로드 중 서버 오류가 발생했습니다.' });
+//         }
+//         // 에러가 없으면, 다음 API 핸들러로 넘어갑니다.
+//         next();
+//     });
+// }, async (req, res) => {
+//     // 기존의 게시글 생성 로직은 그대로 둡니다.
+//     try {
+//         const { title, content } = req.body;
+//         if (!title || !content) {
+//             return res.status(400).json({ message: '제목과 내용은 필수입니다.' });
+//         }
+        
+//         const filesData = req.files ? req.files.map(file => ({
+//             url: file.location,
+//             name: file.originalname,
+//             type: file.mimetype,
+//         })) : [];
+        
+//         const newPost = new Post({
+//             title,
+//             content,
+//             files: filesData,
+//             author: req.user.id
+//         });
+//         await newPost.save();
+//         res.status(201).json(newPost);
+//     } catch (error) {
+//         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+//     }
+// });
+
 //작성 게시글 수정
-app.put('/api/posts/:id', authMiddleware, upload.single('image'), async(req, res) => {
+app.put('/api/posts/:id', authMiddleware, upload.array('files', 5), async(req, res) => {
     try {
         // console.log('서버가 받은 데이터 (req.body):', req.body);
         const { title, content } = req.body;
@@ -270,8 +331,14 @@ app.put('/api/posts/:id', authMiddleware, upload.single('image'), async(req, res
 
         const updateData = { title, content };
         // 새로운 이미지가 업데이트 됐다면, imageURL도 포함함
-        if (req.file) {
-            updateData.imageUrl = req.file.location;
+        if ( req.files && req.files.length > 0 ) {
+            const filesData = req.files.map(file => ({
+                url: file.location,
+                name: file.originalname,
+                type: file.mimetype,
+            }));
+            // 이 로직은 기존 파일을 덮어씀. 기존 파일에 추가하려면 다른 로직이 필요함. 
+            updateData.files = filesData;
         }
 
         if ( !title || !content ) {
@@ -291,6 +358,7 @@ app.put('/api/posts/:id', authMiddleware, upload.single('image'), async(req, res
         res.status(201).json(updatePost);
 
     } catch (error) {
+         console.error("!!! 게시글 생성 중 에러 발생 !!!", error);
         res.status(500).json({message:'서버 오류 발생'});
     }
 });
@@ -322,6 +390,7 @@ app.get('/api/posts/:postId/comments', async(req, res) => {
 
     res.status(200).json(comments);
     } catch (error) {
+         console.error("!!! 게시글 수정 중 에러 발생 !!!", error);
         res.status(500).json({message: '서버 오류가 발생했습니다.', error});
     } 
 });
