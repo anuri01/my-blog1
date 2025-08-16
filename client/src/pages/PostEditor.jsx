@@ -11,7 +11,7 @@ function PostEditor() {
 const [ title, setTitle ] = useState('');
 const [ content, setContent ] = useState('');
 // const [ imageFile, setImageFile ] = useState(null); // 선택한 이미지 파일을 기억할 상태
-const [ files, setFiles ] = useState([]); // 단일 파일에 배열로 변경
+const [ files, setFiles ] = useState([]); // 단일 파일에서 배열로 변경
 const navigate = useNavigate();
 const { postId } = useParams(); // URL에서 PostId를 꺼내 옴
 const isEditMode = Boolean(postId); // PostId가 있으면 true(수정모드) 없으면 false(등록모드)
@@ -25,6 +25,7 @@ useEffect(() => {
                 const response = await api.get(`/posts/${postId}`);
                 setTitle(response.data.title);
                 setContent(response.data.content);
+                setFiles(response.data.files || []);
             } catch (error) {
                 console.error("게시물 정보를 불러오지 못했습니다.", error);
                 alert('게시물 정보를 불러오지 못했습니다.');
@@ -48,13 +49,30 @@ const handlePostSubmit = async (e) => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    if (files.length > 0) {
-        for ( let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]); //이름표를 'files'로 통일
+
+    const existingFiles = [];
+    const newFiles = [];
+
+    // (질문에 대한 답) files 상태를 순회하며 '기존 파일'과 '새 파일'을 분류합니다.
+    // File 객체는 'instanceof File'로 확인할 수 있습니다.
+    files.forEach(file => {
+        if(file instanceof File) {
+            newFiles.push(file); // 새로운 파일
+        } else {
+            existingFiles.push(file); // 기존파일
         }
-    }
-    
-    // 디버깅: FormData 내용 확인
+    });
+
+    // 새로 추가된 파일들을 FormData에 담는다. 
+    if (newFiles.length > 0) {
+        for ( let i = 0; i < newFiles.length; i++) {
+            formData.append('files', newFiles[i]); //이름표를 'files'로 통일
+        }
+    };
+    // 남아있는 기존 파일들의 정보는 JSON 문자열로 변환해 담는다. 
+    formData.append('existingFiles', JSON.stringify(existingFiles));
+
+     // 디버깅: FormData 내용 확인
     // console.log('=== FormData 내용 확인 ===');
     // for (let [key, value] of formData.entries()) { entries() 메소드는 객체 안의 값을 차례로 반환. for of 문법 그 값을 받아서 구조분해 할당함.
     //     console.log(key, value);
@@ -87,10 +105,24 @@ const handlePostSubmit = async (e) => {
     }
 };
 
-const handleCancle = () => {
-    // 뒤로가기 기능을 실행함
-    navigate(-1);
-}
+// 파일 선택 시 기존 목록에 추가하는 함수
+    const handleFileChange = (e) => {
+        //prevFiles는 현재 files의 최신 상태값임
+        setFiles(prevFiles => [
+            ...prevFiles, //기존 배열을 가져와
+            ...Array.from(e.target.files) // 새로 선택한 파일을 배열로 만들어 뒤로 합침
+        ]);
+    };
+    
+    const handleRemoveFile = (indexToRemove) => {
+        // indexToRemove는 삭제할 파일은 순서(인덱스번호) 임. 
+        setFiles(prevFiles => prevFiles.filter((file, index) => index !== indexToRemove));
+    }
+
+    const handleCancle = () => {
+        // 뒤로가기 기능을 실행함
+        navigate(-1);
+    }
 return (
         <div className="post-editor">
             {/* isEditMode 값에 따라 제목을 동적으로 변경 */}
@@ -126,9 +158,9 @@ return (
                              id="file-upload"
                              type="file"
                              multiple
-                             accept="image/*, application/pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" // 허용 파일 타입 지정
-                            //  accept="image/*"
-                             onChange={(e) => setFiles(Array.from(e.target.files))}
+                             accept="image/*, application/pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, .txt" // 허용 파일 타입 지정
+                            //  onChange={(e) => setFiles(Array.from(e.target.files))} 기존 첨부파일 목록 불러오기
+                             onChange={handleFileChange}
                              className="file-input" // input에 클래스 추가(숨기기위함)
                             />
                             {/* Array.from()을 사용해 FileList를 실제 배열로 변환 후 map을 실행합니다. */}
@@ -136,6 +168,7 @@ return (
                                 <div key={index} className="file-list">
                                     <div className="file-item">
                                         <span>{file.name}</span>
+                                        <button type='button' onClick={() => handleRemoveFile(index)} className="delete-icon">&times;</button>
                                     </div>
                                 </div>
                             ))}

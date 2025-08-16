@@ -326,21 +326,25 @@ app.post('/api/posts', authMiddleware, upload.array('files', 5), async(req, res)
 app.put('/api/posts/:id', authMiddleware, upload.array('files', 5), async(req, res) => {
     try {
         // console.log('서버가 받은 데이터 (req.body):', req.body);
-        const { title, content } = req.body;
+        const { title, content, existingFiles } = req.body;
         const postId = req.params.id;
+        // console.log('jons변환전 데이터:', existingFiles);
 
-        const updateData = { title, content };
-        // 새로운 이미지가 업데이트 됐다면, imageURL도 포함함
-        if ( req.files && req.files.length > 0 ) {
-            const filesData = req.files.map(file => ({
-                url: file.location,
-                name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
-                type: file.mimetype,
-            }));
-            // 이 로직은 기존 파일을 덮어씀. 기존 파일에 추가하려면 다른 로직이 필요함. 
-            updateData.files = filesData;
-        }
+        // 1. 프론트에서 보낸 '남아있는 기존 파일' 목로을 JSON으로 파싱.
+        const keptFiles = JSON.parse(existingFiles || []);
+        // console.log('jons변환후 데이터:', keptFiles);
 
+        // 2. 새로 업데이트된 파일은 스키마에 맞게 가공
+        const newUploadFiles = req.files ? req.files.map(file => ({
+            url: file.location,
+            name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
+            type: file.mimetype,
+        })) : []
+
+        // 3. 기존 파일과 새 파일을 합쳐 최종 파일 목록을 생성
+        const finalFiles = [...keptFiles, ...newUploadFiles];
+        const updateData = {title, content, files: finalFiles};
+        
         if ( !title || !content ) {
             return res.status(400).json({message:'제목과 내용을 필수사항이에요'});
         }

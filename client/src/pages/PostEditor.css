@@ -103,10 +103,22 @@
 }
 
 .file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.9rem;
   color: #555;
   background-color: #f0f0f0;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   margin-bottom: 0.5rem;
+}
+
+.delete-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  padding: 0 0.5rem;
 }
