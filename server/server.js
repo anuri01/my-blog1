@@ -530,6 +530,18 @@ app.post('/api/delete-file', authMiddleware, async( req, res ) => {
     }
 }) 
 
+// --- 👇 Tiptap 에디터 이미지 업로드 전용 API ---
+// authMiddleware를 통과해야만 실행됩니다.
+app.post('/api/upload', authMiddleware, upload.single('image'), (req, res) => {
+  // upload.single('image')가 파일 처리를 모두 끝낸 상태입니다.
+  if (!req.file) {
+    return res.status(400).json({ message: '이미지 파일이 없습니다.' });
+  }
+
+  // 성공 시, S3에 업로드된 이미지의 URL을 프론트엔드에 보내줍니다.
+  res.json({ imageUrl: req.file.location });
+});
+
 // 서버실행
 httpServer.listen(PORT, () => {
     console.log(`서버가 http://localhost:${PORT} 에서 실행중입니다.`)

@@ -24,8 +24,15 @@
   /* font-size: 0.8rem; */
   line-height: 1rem;
   color: #333;
-  /* border-bottom: 1px solid #e0e0e0; */
+  border-bottom: 1px solid #e0e0e0;
 }
+
+.post-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px; /* 이미지 모서리를 살짝 둥글게 (선택 사항) */
+}
+
 /* 👇 --- Tiptap 에디터의 기본 스타일을 흉내 내는 CSS 추가 --- 👇 */
 /* Tiptap은 p, strong, em 등의 기본 HTML 태그를 사용하므로, 
    이 태그들에 직접 스타일을 적용해 줍니다. */
@@ -174,8 +181,8 @@
 
 .attachments {
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  padding-top: 1.5rem; 
+  /* border-top: 1px solid #eee; */
 }
 
 .attachments h4 {

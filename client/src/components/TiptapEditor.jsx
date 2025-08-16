@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
 import FontSize from '@tiptap/extension-font-size'; // 👈 1. FontSize 라이브러리 import
+import Image from '@tiptap/extension-image'; // 👈 Image 확장 추가
 import { Color } from "@tiptap/extension-color";
 import Placeholder from "@tiptap/extension-placeholder";
+import toast from 'react-hot-toast';
+import api from '../api/axiosConfig'; // 👈 S3 업로드를 위해 api import
 import './TiptapEditor.css'; // 에디터와 메뉴바를 위한 CSS
 // import Underline from '@tiptap/extension-underline';
 // import { TextStyle as BaseTextStyle } from '@tiptap/extension-text-style';
@@ -31,12 +34,34 @@ import './TiptapEditor.css'; // 에디터와 메뉴바를 위한 CSS
 
 // --- 메뉴바 컴포넌트 ---
 const MenuBar = ({ editor }) => {
+  const fileInputRef = useRef(null); // 숨겨진 input에 접근하기 위한 ref
+
   if (!editor) {
     return null;
   }
 
   //글자 크기 목록
   const fontSizes = ['12px', '14px', '16px', '18px', '24px'];
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      // 서버의 /api/upload 엔드포인트로 이미지 업로드 요청
+      const response = await api.post('/upload', formData);
+
+      //성공 시, S3로부터 받은 이미지 URL을 에디터에 삽입
+      editor.chain().focus().setImage({ src: response.data.imageUrl }).run();
+
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      toast.error('이미지 업로드에 실패했어요.');
+    }
+  };
 
   return (
     <div className="menu-bar">
@@ -111,6 +136,17 @@ const MenuBar = ({ editor }) => {
         취소선
       </button>
       {/* 여기에 다른 버튼들을 추가할 수 있습니다. */}
+       <button type="button" onClick={() => fileInputRef.current.click()}>
+        이미지
+      </button>
+      {/* 👇 눈에 보이지 않는 파일 입력창 */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        style={{ display: 'none' }}
+        accept="image/*"
+      />
     </div>
   );
 };
@@ -129,6 +165,9 @@ function TiptapEditor({ content, onChange }) {
       // Underline,
       Placeholder.configure({
         placeholder: '내용을 입력하세요.',
+      }),
+      Image.configure({
+        allowBase64: true,
       }),
     ],
     // 👇 content는 여기서 초기화 용도로만 사용됩니다.
