@@ -119,13 +119,13 @@ if( isLoading ) {
                 </div>
                 </div>
                 {/* 👇 로그인한 사용자가 본인 글일 때만 수정/삭제 버튼 보이기 */}
-                  {isLoggedIn && user?.id === post.author?._id && (
+                  {/* {isLoggedIn && user?.id === post.author?._id && (
                 <div className="post-actions">
-                    <Link to={`/edit/${post._id}`} className="action-button">수정</Link>
+                    <Link to={`/edit/${post._id}`} className="action-button">수정</Link> */}
                     {/* <button onClick={() => handleEditClick(post)}>수정</button> */}
-                    <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
+                    {/* <button className="action-button" onClick={() => handleDeletePost(post._id)}>삭제</button>
                 </div>
-                )}
+                )} */}
                 </>
                 </div>
             ))
