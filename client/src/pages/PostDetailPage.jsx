@@ -4,6 +4,7 @@ import toast from "react-hot-toast"
 import io from "socket.io-client";
 import api from "../api/axiosConfig";
 import useUserStore from "../store/userStore"; // 로그인 상태 확인
+import ImageModal from "../components/ImageModal"; // ImageModal 컴포넌트 임포트
 import './PostDetailPage.css';
 
 // const socket = io(import.meta.env.SOCKET_API_URL || 'http://localhost:4500', { path:'/api/socket.id' });
@@ -14,6 +15,10 @@ function PostDetailPage() {
     const [ post, setPost ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState('');
+    const [ modalIsOpen, setModalIsOpen ] = useState(false); // 모달 상태
+    const [ selectedImage, setSelectedImage ] = useState('') // 모달에 보여줄 이미지 url 상태
+    const [ imageName, setImageName ] = useState('') // 모달에 보여줄 이미지 alt 상태
+
     // 댓글 상태 설정 추가
     const [ comments, setComments ] = useState([]); // 댓글 목록 상태
     const [ newComment, setNewComment ] = useState(''); // 새 댓글 입력창 상태
@@ -109,7 +114,18 @@ function PostDetailPage() {
     if (!post) {
     return null; 
     }
+    
+    // 모달 열고 닫는 함수
+    const openModal = (imageUrl, imageName ) => {
+        setSelectedImage(imageUrl);
+        setImageName(imageName);
+        setModalIsOpen(true);
+    };
 
+    const closeModal = () => {
+        setModalIsOpen(false);
+        setSelectedImage('');
+    }
 
     return (
         <article className="post-detail">
@@ -146,12 +162,19 @@ function PostDetailPage() {
                     {post.files.map((file, index) => (
                     <li key={index}>
                         {/* 파일 타입이 'image/'로 시작하면 이미지로, 아니면 다운로드 링크로 표시 했으나 에디터로 이미지 삽입 기능은 넘겨서 링크로만 표시 */}
-                        {/* {file.type.startsWith('image/') ? (
-                        <img src={file.url} alt={file.name} className="attachment-image" />
+                        {file.type.startsWith('image/') ? (
+                        // <img src={file.url} alt={file.name} className="attachment-image thumbnail" onClick={() => openModal(file.url, file.name)} />
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault(); // a태그의 기본 동작 방지(상단으로 이동)
+                            openModal(file.url, file.name)
+                        }}
+                           className="attachment-link"
+                        >{file.name}
+                        </a>
                         ) : (
                         <a href={file.url} download className="attachment-link">{file.name}</a>
-                        )} */}
-                         <a href={file.url} download className="attachment-link">{file.name}</a>
+                        )}
+                         {/* <a href={file.url} download className="attachment-link">{file.name}</a> */}
                     </li>
                     ))}
                 </ul>
@@ -204,7 +227,12 @@ function PostDetailPage() {
                     <p key={index}>{line}</p>
                 ))}
             </div> */}
-            
+            <ImageModal 
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            imageUrl={selectedImage}
+            imageName={imageName}
+            />
         </article>
     );
 }
