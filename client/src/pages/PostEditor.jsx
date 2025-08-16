@@ -12,6 +12,7 @@ const [ title, setTitle ] = useState('');
 const [ content, setContent ] = useState('');
 // const [ imageFile, setImageFile ] = useState(null); // 선택한 이미지 파일을 기억할 상태
 const [ files, setFiles ] = useState([]); // 단일 파일에서 배열로 변경
+const [ deletedFiles, setDeletedFiles ] = useState([]); // 삭제된 파일 목록을 기억할 상태
 const navigate = useNavigate();
 const { postId } = useParams(); // URL에서 PostId를 꺼내 옴
 const isEditMode = Boolean(postId); // PostId가 있으면 true(수정모드) 없으면 false(등록모드)
@@ -72,6 +73,9 @@ const handlePostSubmit = async (e) => {
     // 남아있는 기존 파일들의 정보는 JSON 문자열로 변환해 담는다. 
     formData.append('existingFiles', JSON.stringify(existingFiles));
 
+    // 삭제할 파일 목록도 JSON 문자열로 변환하여 FormData에 담습니다.
+    formData.append('deletedFiles', JSON.stringify(deletedFiles));
+
      // 디버깅: FormData 내용 확인
     // console.log('=== FormData 내용 확인 ===');
     // for (let [key, value] of formData.entries()) { entries() 메소드는 객체 안의 값을 차례로 반환. for of 문법 그 값을 받아서 구조분해 할당함.
@@ -115,8 +119,15 @@ const handlePostSubmit = async (e) => {
     };
     
     const handleRemoveFile = (indexToRemove) => {
-        // indexToRemove는 삭제할 파일은 순서(인덱스번호) 임. 
-        setFiles(prevFiles => prevFiles.filter((file, index) => index !== indexToRemove));
+        const fileToRemove = files[indexToRemove];
+
+        // 만약 삭제하려는 파일이 기존 파일(File 객체 아님)이라면,
+        if(!(fileToRemove instanceof File)) {
+            // deleteFile 목록에 추가
+            setDeletedFiles(prev => [...prev, fileToRemove]);
+        }
+        // 화면 목록에서는 삭제함
+        setFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
     }
 
     const handleCancle = () => {

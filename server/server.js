@@ -90,6 +90,16 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch(err => console.error('MongoDB 연결 오류', err));
 
 
+// aws-sdk (v3)을 사용해 삭제 명령을 준비(S3 Client 생성)
+        import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+        const s3 = new S3Client({
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            },
+            region: process.env.AWS_REGION,
+        });
+
 app.get('/api', (req, res) => {
     res.send('블로그 API 서버');
 });
@@ -326,12 +336,28 @@ app.post('/api/posts', authMiddleware, upload.array('files', 5), async(req, res)
 app.put('/api/posts/:id', authMiddleware, upload.array('files', 5), async(req, res) => {
     try {
         // console.log('서버가 받은 데이터 (req.body):', req.body);
-        const { title, content, existingFiles } = req.body;
+        const { title, content, existingFiles, deletedFiles } = req.body;
         const postId = req.params.id;
         // console.log('jons변환전 데이터:', existingFiles);
 
         // 1. 프론트에서 보낸 '남아있는 기존 파일' 목로을 JSON으로 파싱.
         const keptFiles = JSON.parse(existingFiles || []);
+        const fileToDelete = JSON.parse(deletedFiles || []);
+
+        if( fileToDelete.length > 0 ) {
+            //promise all을 사용해 파일을 동시에 삭제함
+            await Promise.all(fileToDelete.map(file => {
+                const fileKey = decodeURIComponent(new URL(file.url).pathname.substring(1));
+                // 2. 디버깅을 위해 실제 키가 어떻게 보이는지 확인합니다.
+                // console.log('S3에서 삭제 시도하는 파일 키:', fileKey);
+
+                const command = new DeleteObjectCommand({
+                   Bucket: process.env.S3_BUCKET_NAME,
+                   Key: fileKey, 
+                });
+                return s3.send(command);
+            }));
+        }
         // console.log('jons변환후 데이터:', keptFiles);
 
         // 2. 새로 업데이트된 파일은 스키마에 맞게 가공
@@ -475,6 +501,34 @@ app.put('/api/users/password', authMiddleware, async ( req, res ) => {
         res.status(500).json({message:'서버 오류가 발생했습니다.'});
     }
 });
+
+// S3파일 삭제(수정완료시에만 지울 것이지 때문에 현재는 사용하지 않음)
+app.post('/api/delete-file', authMiddleware, async( req, res ) => {
+    // s3에 저장된 파일의 전체 url을 요청 body에 받는다. 
+    const { fileUrl } = req.body;
+    if(!fileUrl) {
+        return res.status(400).json({message: '파일 url이 필요합니다.'});
+    }
+
+    try {
+        // 1. 전체 url에서 파일 키(파일 경로 + 이름)을 추출
+        // 예: https://버킷이름.s3.리전.amazonaws.com/images/12345_사진.jpg -> images/12345_사진.jpg
+        const fileKey = new URL(fileUrl).pathname.substring(1);
+
+            const command = new DeleteObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: fileKey, // 삭제할 파일 키
+        });
+
+        // 3. S3에 삭제 명령을 보냄. 
+        await s3.send(command);
+        res.json({message: 'S3에서 파일이 성공적으로 삭제되었습니다.'});
+    } catch (error) {
+        console.error("S3 파일 삭제 중 에러", error);
+        res.status(500).json({message: '파일 삭제 중 서버 오류가 발생했습니다.'});
+
+    }
+}) 
 
 // 서버실행
 httpServer.listen(PORT, () => {
