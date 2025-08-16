@@ -111,6 +111,13 @@ const handlePostSubmit = async (e) => {
 
 // 파일 선택 시 기존 목록에 추가하는 함수
     const handleFileChange = (e) => {
+        const newFiles = Array.from(e.target.files);
+        // 파일 개수 제한 로직 추가
+        if (files.length + newFiles.length > 5) {
+            toast.error('파일은 최대 5개까지만 첨부할 수 있습니다.');
+            return;
+        }
+        
         //prevFiles는 현재 files의 최신 상태값임
         setFiles(prevFiles => [
             ...prevFiles, //기존 배열을 가져와

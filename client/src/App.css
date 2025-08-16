@@ -218,3 +218,27 @@ button.button-primary:hover {
   margin-top: 1rem;
   font-weight: 500;
 }
+
+/* --- 모달 닫기 버튼 스타일 --- */
+.close-modal-button {
+  position: absolute; /* 모달 창을 기준으로 위치를 잡습니다. */
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  border-radius: 50%; /* 원 모양으로 만듭니다. */
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background-color 0.2s;
+}
+
+.close-modal-button:hover {
+  background: rgba(0, 0, 0, 0.6);
+}

@@ -16,8 +16,10 @@ content: {
   transform: 'translate(-50%, -50%)',
   borer: 'none',
   background: 'transparent',
+  padding: '0',
   maxWidth: '90vw',
-  maxHeight: '90vh'
+  maxHeight: '90vh',
+  overflow: 'visible', // 버튼이 밖으로 나갈 수 있도록 추가
 },
 };
 
@@ -31,6 +33,10 @@ function ImageModal({ isOpen, onRequestClose, imageUrl, imageName }) {
      style={customStyles}
      contentLabel='Image Modal'
     >
+      {/* 👇 --- X 닫기 버튼 추가 --- 👇 */}
+      <button onClick={onRequestClose} className="close-modal-button">
+        &times;
+      </button>
       <img src={imageUrl} alt={imageName} style={{ maxWidth: '100%', maxHeight: '100%', display: 'block'}} />
     </Modal>
   );
