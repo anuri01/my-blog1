@@ -334,7 +334,7 @@ app.put('/api/posts/:id', authMiddleware, upload.array('files', 5), async(req, r
         if ( req.files && req.files.length > 0 ) {
             const filesData = req.files.map(file => ({
                 url: file.location,
-                name: file.originalname,
+                name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
                 type: file.mimetype,
             }));
             // 이 로직은 기존 파일을 덮어씀. 기존 파일에 추가하려면 다른 로직이 필요함. 
